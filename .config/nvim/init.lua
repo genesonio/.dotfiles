@@ -1,0 +1,2 @@
+require("genesonio")
+print("test")
