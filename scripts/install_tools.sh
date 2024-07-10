@@ -166,6 +166,18 @@ install_mysql() {
   echo "MySQL installed!"
 }
 
+install_stow() {
+  echo "Installing stow..."
+  sudo apt install -y stow
+  echo "stow installed!"
+}
+
+symlink() {
+  echo "Symlinking with stow"
+  stow .
+  echo "Symlinking done!"
+}
+
 # Run the functions
 install_zsh
 make_zsh_default
@@ -182,6 +194,10 @@ install_go
 install_typescript
 install_docker
 install_mysql
+install_stow
 
-echo "All tools and plugins installed successfully! Please log out and log back in for zsh to become the default shell."
+echo "All tools and plugins installed successfully! Please log out and log back in for 'Making zsh' to become the default shell."
 
+symlink
+
+echo "Symlinking done!"
