@@ -1,7 +1,12 @@
 return {
   "theprimeagen/harpoon",
   config = function()
-    require("harpoon").setup()
+    local win_width = vim.api.nvim_win_get_width(0)
+    require("harpoon").setup({
+      menu = {
+        width = math.floor(win_width - (win_width / 2)),
+      },
+    })
     local mark = require("harpoon.mark")
     local ui = require("harpoon.ui")
 
