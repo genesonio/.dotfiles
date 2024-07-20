@@ -75,8 +75,8 @@ plugins=(git zsh-syntax-highlighting zsh-autosuggestions fzf aliases colorize co
 
 source $ZSH/oh-my-zsh.sh
 
-source /home/genesonio/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
-source /home/genesonio/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+source ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+source ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 
 # User configuration
 
@@ -233,15 +233,17 @@ export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || pr
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # Turso
-export PATH="/home/genesonio/.turso:$PATH"
+export PATH="/home/genesio/.turso:$PATH"
 
 # bun completions
-[ -s "/home/genesonio/.bun/_bun" ] && source "/home/genesonio/.bun/_bun"
+[ -s "/home/genesio/.bun/_bun" ] && source "/home/genesio/.bun/_bun"
 
 # pnpm
-export PNPM_HOME="/home/genesonio/.local/share/pnpm"
+export PNPM_HOME="/home/genesio/.local/share/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
+
+export PATH="$PATH:/opt/nvim-linux64/bin"
