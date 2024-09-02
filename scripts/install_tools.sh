@@ -58,7 +58,8 @@ install_nvm() {
 # Function to install fzf
 install_fzf() {
   echo "Installing fzf..."
-  sudo apt install -y fzf
+  git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+  ~/.fzf/install
   echo "fzf installed!"
 }
 

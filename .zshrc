@@ -223,14 +223,17 @@ jcurl() {
     curl $@ | jq
 }
 
+awq() {
+    pkill aw-
+    notify-send "ActivityWatch killed"    # Optional, sends a notification when ActivityWatch is killed
+}
+
 eval "$(starship init zsh)"
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # Turso
 export PATH="/home/genesio/.turso:$PATH"
@@ -247,3 +250,5 @@ esac
 # pnpm end
 
 export PATH="$PATH:/opt/nvim-linux64/bin"
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
