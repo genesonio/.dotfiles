@@ -115,6 +115,8 @@ alias ls="ls -la"
 
 alias gpod="git pull origin dev"
 
+alias air="/home/genesio/go/bin/air"
+
 update() {
     sudo apt update
     sudo apt upgrade
