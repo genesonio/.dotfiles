@@ -126,18 +126,22 @@ mason_lspconfig.setup_handlers {
     if server_name == "solidity" then
       local lspconfig = require('lspconfig')
       local git_root = vim.fs.dirname(vim.fs.find({ ".git" }, { upward = true })[1])
-      lspconfig.solidity.setup {
-        capabilities = capabilities,
-        on_attach = on_attach,
-        root_dir = lspconfig.util.root_pattern("hardhat.config.js", "hardhat.config.ts", "foundry.toml", "remappings.txt", "truffle.js", "truffle-config.js", "ape-config.yaml", ".git", "package.json"),
-        settings = {
-          -- example of global remapping
-          solidity = {
-            allowPaths = { git_root },
-            remmapings = { ["@openzeppelin/"] = git_root .. "/node_modules/@openzeppelin/" }
+      if git_root then
+        lspconfig.solidity.setup {
+          capabilities = capabilities,
+          on_attach = on_attach,
+          root_dir = lspconfig.util.root_pattern("hardhat.config.js", "hardhat.config.ts", "foundry.toml", "remappings.txt", "truffle.js", "truffle-config.js", "ape-config.yaml", ".git", "package.json"),
+          settings = {
+            -- example of global remapping
+            solidity = {
+              allowPaths = { git_root },
+              remmapings = { ["@openzeppelin/"] = git_root .. "/node_modules/@openzeppelin/" }
+            }
           }
         }
-      }
+    else
+      print("No git root found")
+    end
     else
       if server_name == "gopls" then
         vim.keymap.set("n", "<leader>f", function()
