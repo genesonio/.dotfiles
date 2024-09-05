@@ -201,6 +201,12 @@ vp() {
     nvim .
 }
 
+study() {
+    selected=$(find ~/Study -mindepth 1 -maxdepth 1 -type d | fzf --preview 'ls {}' --query "$1" --print0 --select-1)
+    cd $selected 
+    nvim .
+}
+
 dup() {
   docker-compose up --build "$@"
 }
