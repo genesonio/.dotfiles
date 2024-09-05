@@ -2,6 +2,21 @@
 --  This function gets run when an LSP connects to a particular buffer.
 local defold_stubs_path = "/home/genesonio/.config/nvim/after/externals/defold-stubs"
 
+local templ_format = function()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local filename = vim.api.nvim_buf_get_name(bufnr)
+  local cmd = "templ fmt " .. vim.fn.shellescape(filename)
+
+  vim.fn.jobstart(cmd, {
+    on_exit = function()
+      -- Reload buffer
+      if vim.api.nvim_get_current_buf() == bufnr then
+        vim.cmd("e!")
+      end
+    end,
+  })
+end
+
 local on_attach = function(a, bufnr)
   -- NOTE: Remember that lua is a real programming language, and as such it is possible
   -- to define small helper and utility functions so you don't have to repeat yourself
@@ -58,10 +73,12 @@ local servers = {
   gopls = {},
   -- pyright = {},
   -- rust_analyzer = {},
+  templ = {},
   sqlls = {},
-  tailwindcss = {},
+  tailwindcss = { filetypes = { 'html', 'javascript', 'typescript', 'react', 'templ' }, settings = { tailwindcss = { includeLanguages = { templ = 'html', }, }, }, },
   tsserver = {},
-  html = { filetypes = { 'html', 'twig', 'hbs' } },
+  html = { filetypes = { 'html', 'twig', 'hbs', 'templ' } },
+  htmx = { filetypes = { 'htmx', 'templ', 'html' } },
   -- solidity = {},
   lua_ls = {
     filetypes = { 'lua', 'script' },
@@ -108,7 +125,7 @@ mason_lspconfig.setup_handlers {
     end
     if server_name == "solidity" then
       local lspconfig = require('lspconfig')
-      local git_root = vim.fs.dirname(vim.fs.find({".git"}, { upward = true })[1])
+      local git_root = vim.fs.dirname(vim.fs.find({ ".git" }, { upward = true })[1])
       lspconfig.solidity.setup {
         capabilities = capabilities,
         on_attach = on_attach,
@@ -117,7 +134,7 @@ mason_lspconfig.setup_handlers {
           -- example of global remapping
           solidity = {
             allowPaths = { git_root },
-            remmapings = {["@openzeppelin/"] = git_root .. "/node_modules/@openzeppelin/"}
+            remmapings = { ["@openzeppelin/"] = git_root .. "/node_modules/@openzeppelin/" }
           }
         }
       }
@@ -127,6 +144,9 @@ mason_lspconfig.setup_handlers {
           vim.lsp.buf.format({ async = true })
           vim.lsp.buf.code_action({ context = { only = { "source.organizeImports" } }, apply = true })
         end)
+      end
+      if server_name == "templ" then
+        vim.keymap.set("n", "<leader>f", templ_format)
       end
       require('lspconfig')[server_name].setup {
         capabilities = capabilities,
@@ -179,7 +199,7 @@ cmp.setup.filetype({ "sql", "mysql" }, {
 })
 
 
-vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
   pattern = "*.script",
   callback = function()
     vim.bo.filetype = "lua"
