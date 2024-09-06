@@ -117,6 +117,8 @@ alias gpod="git pull origin dev"
 
 alias air="/home/genesio/go/bin/air"
 
+# alias templ="/home/genesio/go/bin/templ"
+
 update() {
     sudo apt update
     sudo apt upgrade

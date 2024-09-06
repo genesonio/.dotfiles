@@ -75,7 +75,7 @@ local servers = {
   -- rust_analyzer = {},
   templ = {},
   sqlls = {},
-  tailwindcss = { filetypes = { 'html', 'javascript', 'typescript', 'react', 'templ' }, settings = { tailwindcss = { includeLanguages = { templ = 'html', }, }, }, },
+  tailwindcss = { filetypes = { 'html', 'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'react', 'templ' }, settings = { tailwindcss = { includeLanguages = { templ = 'html', }, }, }, },
   tsserver = {},
   html = { filetypes = { 'html', 'twig', 'hbs', 'templ' } },
   htmx = { filetypes = { 'htmx', 'templ', 'html' } },
