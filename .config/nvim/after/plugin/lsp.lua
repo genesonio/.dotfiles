@@ -70,7 +70,13 @@ require('mason-lspconfig').setup()
 --  define the property 'filetypes' to the map in question.
 local servers = {
   -- clangd = {},
-  gopls = {},
+  gopls = {
+    analyses = {
+      unusedparams = true,
+    },
+    staticcheck = true,
+    gofumpt = true,
+  },
   -- pyright = {},
   -- rust_analyzer = {},
   templ = {},
@@ -139,9 +145,9 @@ mason_lspconfig.setup_handlers {
             }
           }
         }
-    else
-      print("No git root found")
-    end
+      else
+        print("No git root found")
+      end
     else
       if server_name == "gopls" then
         vim.keymap.set("n", "<leader>f", function()
