@@ -45,13 +45,10 @@ install_zsh_plugins() {
 # Function to install nvm
 install_nvm() {
   echo "Installing nvm..."
-  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | zsh
-  # Load nvm and install the latest stable node
-
-  export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash  # Load nvm and install the latest stable node
 
   nvm install --lts
+  nvm use --lts
   echo "nvm installed!"
 }
 
@@ -80,17 +77,9 @@ install_tmux() {
 
 # Function to install nvim
 install_nvim() {
-  echo "Installing nvim..."
-  if command -v apt > /dev/null; then
-    sudo apt update && sudo apt install -y neovim
-  elif command -v apt-get > /dev/null; then
-    sudo apt-get update && sudo apt-get install -y neovim
-  elif command -v snap > /dev/null; then
-    sudo snap install nvim --classic
-  else
-    echo "Package manager not supported. Please install nvim manually."
-  fi
-  echo "nvim installed!"
+  curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
+  sudo rm -rf /opt/nvim
+  sudo tar -C /opt -xzf nvim-linux64.tar.gz 
 }
 
 # Function to install pnpm
@@ -116,19 +105,6 @@ install_bun() {
   echo "Installing bun..."
   curl -fsSL https://bun.sh/install | bash
   echo "bun installed!"
-}
-
-# Function to install go
-install_go() {
-  echo "Installing Go..."
-  if command -v apt > /dev/null; then
-    sudo apt update && sudo apt install -y golang-go
-  elif command -v apt-get > /dev/null; then
-    sudo apt-get update && sudo apt-get install -y golang-go
-  else
-    echo "Package manager not supported. Please install Go manually."
-  fi
-  echo "Go installed!"
 }
 
 # Function to install TypeScript globally
@@ -173,29 +149,6 @@ install_stow() {
   echo "stow installed!"
 }
 
-symlink() {
-  echo "Symlinking with stow"
-  stow .
-  echo "Symlinking done!"
-}
-
-# Function to check if Chrome is installed
-check_chrome() {
-  if command -v google-chrome; then
-    echo "Google Chrome is already installed."
-  else
-    echo "Google Chrome is not installed. Installing..."
-    sudo apt update
-    sudo apt install -y google-chrome-stable
-    echo "Google Chrome installed successfully."
-  fi
-}
-
-# Function to open Nerd Fonts GitHub page in Chrome
-open_nerd_fonts_page() {
-  google-chrome https://github.com/ryanoasis/nerd-fonts
-}
-
 # Run the functions
 install_zsh
 make_zsh_default
@@ -220,9 +173,4 @@ symlink
 
 echo "Symlinking done!"
 
-
-# Run functions
-check_chrome
-open_nerd_fonts_page
-
-echo "Nerd font installed manually"
+echo "Install nerd fonts"

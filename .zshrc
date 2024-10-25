@@ -262,3 +262,4 @@ esac
 export PATH="$PATH:/opt/nvim-linux64/bin"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
