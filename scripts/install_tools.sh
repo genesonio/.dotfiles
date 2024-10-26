@@ -52,6 +52,18 @@ install_nvm() {
   echo "nvm installed!"
 }
 
+install_kitty() {
+  echo "Installing KiTTY"
+  sudo apt install kitty -y
+  echo "KiTTY installed"
+}
+
+install_starship() {
+  echo "Installing starship"
+  curl -sS https://starship.rs/install.sh | sh
+  echo "Starship installed"
+}
+
 # Function to install fzf
 install_fzf() {
   echo "Installing fzf..."
@@ -86,6 +98,7 @@ install_nvim() {
   curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
   sudo rm -rf /opt/nvim
   sudo tar -C /opt -xzf nvim-linux64.tar.gz 
+  rm -rf nvim-linux64.tar.gz
 }
 
 # Function to install pnpm
@@ -157,6 +170,8 @@ install_fzf
 install_grep
 install_tmux
 install_nvim
+install_kitty
+install_starship
 install_pnpm
 install_yarn
 install_bun

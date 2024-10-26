@@ -233,9 +233,22 @@ jcurl() {
     curl $@ | jq
 }
 
+aw () {
+    cd ~/.local/opt/activitywatch         
+
+    ./aw-watcher-afk/aw-watcher-afk &
+    ./aw-watcher-window/aw-watcher-window &                 
+    ./aw-server/aw-server;
+    notify-send "ActivityWatch started"   
+}
+
 awq() {
     pkill aw-
-    notify-send "ActivityWatch killed"    # Optional, sends a notification when ActivityWatch is killed
+    notify-send "ActivityWatch killed"    
+}
+
+dot() {
+    nvim ~/.dotfiles
 }
 
 eval "$(starship init zsh)"
