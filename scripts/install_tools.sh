@@ -60,6 +60,12 @@ install_fzf() {
   echo "fzf installed!"
 }
 
+install_grep() {
+  echo "Installing ripgrep"
+  sudo apt install ripgrep
+  echo "Ripgreg installed"
+}
+
 # Function to install tmux
 install_tmux() {
   echo "Installing tmux..."
@@ -148,21 +154,17 @@ install_oh_my_zsh
 install_zsh_plugins
 install_nvm
 install_fzf
+install_grep
 install_tmux
 install_nvim
 install_pnpm
 install_yarn
 install_bun
-install_go
 install_typescript
 install_docker
 install_mysql
 install_stow
 
 echo "All tools and plugins installed successfully! Please log out and log back in for 'Making zsh' to become the default shell."
-
-symlink
-
-echo "Symlinking done!"
 
 echo "Install nerd fonts"
