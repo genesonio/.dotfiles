@@ -236,9 +236,10 @@ jcurl() {
 aw () {
     cd ~/.local/opt/activitywatch         
 
-    ./aw-watcher-afk/aw-watcher-afk &
-    ./aw-watcher-window/aw-watcher-window &                 
-    ./aw-server/aw-server;
+    nohup ./aw-watcher-afk/aw-watcher-afk > aw-watcher-afk.log 2>&1 &
+    nohup ./aw-watcher-window/aw-watcher-window > aw-watcher-window.log 2>&1 &                 
+    nohup ./aw-server/aw-server > aw-server.log 2>&1 &
+
     notify-send "ActivityWatch started"   
 }
 
