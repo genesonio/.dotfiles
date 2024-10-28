@@ -82,7 +82,7 @@ local servers = {
   templ = {},
   sqlls = {},
   tailwindcss = { filetypes = { 'html', 'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'react', 'templ' }, settings = { tailwindcss = { includeLanguages = { templ = 'html', }, }, }, },
-  tsserver = {},
+  ts_ls = {  },
   html = { filetypes = { 'html', 'twig', 'hbs', 'templ' } },
   htmx = { filetypes = { 'htmx', 'templ', 'html' } },
   -- solidity = {},
@@ -207,7 +207,6 @@ cmp.setup.filetype({ "sql", "mysql" }, {
     { name = "buffer" },
   },
 })
-
 
 vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
   pattern = "*.script",
