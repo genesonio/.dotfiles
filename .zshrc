@@ -239,6 +239,7 @@ aw () {
     nohup ./aw-watcher-afk/aw-watcher-afk > aw-watcher-afk.log 2>&1 &
     nohup ./aw-watcher-window/aw-watcher-window > aw-watcher-window.log 2>&1 &                 
     nohup ./aw-server/aw-server > aw-server.log 2>&1 &
+    cd
 
     notify-send "ActivityWatch started"   
 }
