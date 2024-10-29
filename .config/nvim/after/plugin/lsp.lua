@@ -151,8 +151,19 @@ mason_lspconfig.setup_handlers {
     else
       if server_name == "gopls" then
         vim.keymap.set("n", "<leader>f", function()
-          vim.lsp.buf.format({ async = true })
-          vim.lsp.buf.code_action({ context = { only = { "source.organizeImports" } }, apply = true })
+          vim.cmd("write")
+          local params = vim.lsp.util.make_range_params()
+          params.context = { only = { "source.organizeImports" } }
+          local results = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params)
+          for cid, res in pairs(results or {}) do
+            for _, r in pairs(res.result or {}) do
+              if r.edit then
+                local enc = (vim.lsp.get_client_by_id(cid) or {}).offset_encoding or "utf-16"
+                vim.lsp.util.apply_workspace_edit(r.edit, enc)
+              end
+            end
+          end
+          vim.lsp.buf.format({ async = false })
         end)
       end
       if server_name == "templ" then
@@ -212,5 +223,14 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
   pattern = "*.script",
   callback = function()
     vim.bo.filetype = "lua"
+  end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "go",
+  callback = function()
+    vim.bo.tabstop = 8      -- 4 spaces per tab
+    vim.bo.shiftwidth = 8   -- Indent by 4 spaces
+    vim.bo.expandtab = false  -- Use actual tabs, not spaces
   end,
 })
