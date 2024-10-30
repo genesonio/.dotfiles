@@ -82,7 +82,7 @@ local servers = {
   templ = {},
   sqlls = {},
   tailwindcss = { filetypes = { 'html', 'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'react', 'templ' }, settings = { tailwindcss = { includeLanguages = { templ = 'html', }, }, }, },
-  ts_ls = {  },
+  ts_ls = {},
   html = { filetypes = { 'html', 'twig', 'hbs', 'templ' } },
   htmx = { filetypes = { 'htmx', 'templ', 'html' } },
   -- solidity = {},
@@ -151,19 +151,36 @@ mason_lspconfig.setup_handlers {
     else
       if server_name == "gopls" then
         vim.keymap.set("n", "<leader>f", function()
-          vim.cmd("write")
+          -- Save the file first
+          if vim.bo.modified then
+            vim.cmd("write")
+          end
+
+          -- Request organize imports and apply them
           local params = vim.lsp.util.make_range_params()
           params.context = { only = { "source.organizeImports" } }
-          local results = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params)
-          for cid, res in pairs(results or {}) do
-            for _, r in pairs(res.result or {}) do
-              if r.edit then
-                local enc = (vim.lsp.get_client_by_id(cid) or {}).offset_encoding or "utf-16"
-                vim.lsp.util.apply_workspace_edit(r.edit, enc)
+
+          vim.lsp.buf_request(0, "textDocument/codeAction", params, function(err, result, ctx, _)
+            if err then
+              vim.notify("Error organizing imports: " .. err.message, vim.log.levels.ERROR)
+              return
+            end
+
+            if result and #result > 0 then
+              local client = vim.lsp.get_client_by_id(ctx.client_id)
+              local enc = client and client.offset_encoding or "utf-16"
+
+              -- Apply the first code action with edits (organize imports)
+              for _, action in ipairs(result) do
+                if action.edit then
+                  vim.lsp.util.apply_workspace_edit(action.edit, enc)
+                end
               end
             end
-          end
-          vim.lsp.buf.format({ async = false })
+
+            -- Format the buffer after organizing imports
+            vim.lsp.buf.format({ async = false })
+          end)
         end)
       end
       if server_name == "templ" then
@@ -229,8 +246,8 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "go",
   callback = function()
-    vim.bo.tabstop = 8      -- 4 spaces per tab
-    vim.bo.shiftwidth = 8   -- Indent by 4 spaces
-    vim.bo.expandtab = false  -- Use actual tabs, not spaces
+    vim.bo.tabstop = 8
+    vim.bo.shiftwidth = 8
+    vim.bo.expandtab = false
   end,
 })
