@@ -21,5 +21,4 @@ return {
 			vim.keymap.set('n', '<leader>gu', function() vim.cmd('Git fetch --all') end, { desc = 'Fetch all remotes', noremap = true, silent = true })
 		end
 	},
-	'tpope/vim-sleuth'
 }

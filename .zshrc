@@ -1,6 +1,6 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
-export PATH=$PATH:/usr/local/go/bin
+# export PATH=$PATH:/usr/local/go/bin
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
@@ -115,7 +115,7 @@ alias ls="ls -la"
 
 alias gpod="git pull origin dev"
 
-alias air="/home/genesio/go/bin/air"
+# alias air="/home/genesio/go/bin/air"
 
 # alias templ="/home/genesio/go/bin/templ"
 
@@ -128,6 +128,7 @@ update() {
 
 so() {
   source ~/.zshrc
+  source ~/.profile
 }
 
 ssc() {
@@ -233,7 +234,7 @@ jcurl() {
     curl $@ | jq
 }
 
-aw () {
+aw() {
     cd ~/.local/opt/activitywatch         
 
     nohup ./aw-watcher-afk/aw-watcher-afk > aw-watcher-afk.log 2>&1 &

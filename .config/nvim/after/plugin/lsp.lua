@@ -246,8 +246,8 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "go",
   callback = function()
-    vim.bo.tabstop = 8
-    vim.bo.shiftwidth = 8
+    vim.bo.tabstop = 2
+    vim.bo.shiftwidth = 2
     vim.bo.expandtab = false
   end,
 })
