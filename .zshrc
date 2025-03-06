@@ -116,6 +116,8 @@ alias ls="ls -la"
 
 alias gpod="git pull origin dev"
 
+alias tm=tmux
+
 # alias air="/home/genesio/go/bin/air"
 
 # alias templ="/home/genesio/go/bin/templ"
