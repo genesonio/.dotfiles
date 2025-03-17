@@ -188,6 +188,8 @@ dpm() {
         doppler run -- pnpm "$@"
     elif [ -f bun.lockb ]; then
         doppler run -- bun "$@"
+    else
+      echo "No package manager found"
     fi
 }
 
