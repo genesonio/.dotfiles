@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+if [[ $# -eq 1 ]]; then
+    selected=$1
+else
+    selected=$(tmux ls -F '#S   #{?session_attached,(attached),}' | fzf)
+fi
+
+if [[ -z $selected ]]; then
+    exit 0
+fi
+
+selected_name=$(echo "$selected" | awk '{print $1}' | tr . _)
+
+if [[ -n $TMUX ]]; then
+  tmux switchc -t "$selected_name"
+else
+  tmux attach -t "$selected_name"
+fi
