@@ -1,6 +1,6 @@
 -- [[ Configure LSP ]]
 --  This function gets run when an LSP connects to a particular buffer.
-local defold_stubs_path = "/home/genesonio/.config/nvim/after/externals/defold-stubs"
+-- local defold_stubs_path = "/home/genesonio/.config/nvim/after/externals/defold-stubs"
 
 local templ_format = function()
   local bufnr = vim.api.nvim_get_current_buf()
@@ -87,16 +87,7 @@ local servers = {
   htmx = { filetypes = { 'htmx', 'templ', 'html' } },
   -- solidity = {},
   lua_ls = {
-    filetypes = { 'lua', 'script' },
-    Lua = {
-      workspace = {
-        checkThirdParty = false,
-        library = {
-          defold_stubs_path,
-        },
-      },
-      telemetry = { enable = false },
-    },
+    filetypes = { 'lua', 'script', 'love' },
   },
 }
 
@@ -129,71 +120,63 @@ mason_lspconfig.setup_handlers {
         vim.cmd.EslintFixAll()
       end)
     end
-    if server_name == "solidity" then
-      local lspconfig = require('lspconfig')
-      local git_root = vim.fs.dirname(vim.fs.find({ ".git" }, { upward = true })[1])
-      if git_root then
-        lspconfig.solidity.setup {
-          capabilities = capabilities,
-          on_attach = on_attach,
-          root_dir = lspconfig.util.root_pattern("hardhat.config.js", "hardhat.config.ts", "foundry.toml", "remappings.txt", "truffle.js", "truffle-config.js", "ape-config.yaml", ".git", "package.json"),
-          settings = {
-            -- example of global remapping
-            solidity = {
-              allowPaths = { git_root },
-              remmapings = { ["@openzeppelin/"] = git_root .. "/node_modules/@openzeppelin/" }
-            }
-          }
-        }
-      else
-        print("No git root found")
-      end
-    else
-      if server_name == "gopls" then
-        vim.keymap.set("n", "<leader>f", function()
-          -- Save the file first
-          if vim.bo.modified then
-            vim.cmd("write")
+    if server_name == "gopls" then
+      vim.keymap.set("n", "<leader>f", function()
+        -- Save the file first
+        if vim.bo.modified then
+          vim.cmd("write")
+        end
+
+        -- Request organize imports and apply them
+        local params = vim.lsp.util.make_range_params()
+        params.context = { only = { "source.organizeImports" } }
+
+        vim.lsp.buf_request(0, "textDocument/codeAction", params, function(err, result, ctx, _)
+          if err then
+            vim.notify("Error organizing imports: " .. err.message, vim.log.levels.ERROR)
+            return
           end
 
-          -- Request organize imports and apply them
-          local params = vim.lsp.util.make_range_params()
-          params.context = { only = { "source.organizeImports" } }
+          if result and #result > 0 then
+            local client = vim.lsp.get_client_by_id(ctx.client_id)
+            local enc = client and client.offset_encoding or "utf-16"
 
-          vim.lsp.buf_request(0, "textDocument/codeAction", params, function(err, result, ctx, _)
-            if err then
-              vim.notify("Error organizing imports: " .. err.message, vim.log.levels.ERROR)
-              return
-            end
-
-            if result and #result > 0 then
-              local client = vim.lsp.get_client_by_id(ctx.client_id)
-              local enc = client and client.offset_encoding or "utf-16"
-
-              -- Apply the first code action with edits (organize imports)
-              for _, action in ipairs(result) do
-                if action.edit then
-                  vim.lsp.util.apply_workspace_edit(action.edit, enc)
-                end
+            -- Apply the first code action with edits (organize imports)
+            for _, action in ipairs(result) do
+              if action.edit then
+                vim.lsp.util.apply_workspace_edit(action.edit, enc)
               end
             end
+          end
 
-            -- Format the buffer after organizing imports
-            vim.lsp.buf.format({ async = false })
-          end)
+          -- Format the buffer after organizing imports
+          vim.lsp.buf.format({ async = false })
         end)
-      end
-      if server_name == "templ" then
-        vim.keymap.set("n", "<leader>f", templ_format)
-      end
-      require('lspconfig')[server_name].setup {
-        capabilities = capabilities,
-        on_attach = on_attach,
-        settings = servers[server_name],
-        filetypes = (servers[server_name] or {}).filetypes,
-      }
+      end)
     end
-  end,
+    if server_name == "templ" then
+      vim.keymap.set("n", "<leader>f", templ_format)
+    end
+    if server_name == "lua_ls" then
+      local love2d = require("love2d")
+      vim.api.nvim_create_autocmd("FileType", {
+        desc = "Init Love2D LSP",
+        callback = function()
+          love2d.setup({
+            path_to_love_bin = "love",
+            path_to_love_library = vim.fn.globpath(vim.o.runtimepath, "love2d/library"),
+            restart_on_save = false,
+          })
+        end
+      })
+    end
+    require('lspconfig')[server_name].setup {
+      capabilities = capabilities,
+      on_attach = on_attach,
+      settings = servers[server_name],
+      filetypes = (servers[server_name] or {}).filetypes,
+    }
+  end
 }
 
 -- [[ Configure nvim-cmp ]]
@@ -250,4 +233,19 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.bo.shiftwidth = 2
     vim.bo.expandtab = false
   end,
+})
+
+vim.api.nvim_create_autocmd("LspAttach", {
+  callback = function(args)
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    if not client then return end
+    if client.supports_method('textDocument/formatting') then
+      vim.api.nvim_create_autocmd('BufWritePre', {
+        buffer = args.buf,
+        callback = function()
+          vim.lsp.buf.format({ bufnr = args.buf, id = client.id })
+        end
+      })
+    end
+  end
 })

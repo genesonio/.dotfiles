@@ -36,3 +36,22 @@ vim.o.breakindent = true
 vim.o.cmdheight = 1
 
 vim.opt.diffopt = "iblank,vertical,internal"
+
+--------------
+--- MACROS ---
+--------------
+
+local ctrlA = vim.api.nvim_replace_termcodes("<C-A>", true, true, true)
+local esc = vim.api.nvim_replace_termcodes("<Esc>", true, true, true)
+
+vim.fn.setreg("l", "p" .. ctrlA .. "yy")
+
+vim.api.nvim_create_augroup("JSLogMacro", { clear = true })
+
+vim.api.nvim_create_autocmd("FileType", {
+  group = "JSLogMacro",
+  pattern = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
+  callback = function()
+    vim.fn.setreg("j", 'yoconsole.log("' .. esc .. 'pa:",' .. esc .. "pa);")
+  end
+})
