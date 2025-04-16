@@ -112,7 +112,7 @@ source ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 
 alias vim=nvim
 
-alias ls="ls -la" 
+alias ls="ls -la -h"
 
 alias gpod="git pull origin dev"
 
@@ -205,7 +205,7 @@ cdd() {
 
 vp() {
     selected=$(find ~/Github -mindepth 1 -maxdepth 1 -type d | fzf --preview 'ls {}' --query "$1" --print0 --select-1)
-    cd $selected 
+    cd $selected
     nvim .
 }
 
@@ -238,19 +238,19 @@ jcurl() {
 }
 
 aw() {
-    cd ~/.local/opt/activitywatch         
+    cd ~/.local/opt/activitywatch
 
     nohup ./aw-watcher-afk/aw-watcher-afk > aw-watcher-afk.log 2>&1 &
-    nohup ./aw-watcher-window/aw-watcher-window > aw-watcher-window.log 2>&1 &                 
+    nohup ./aw-watcher-window/aw-watcher-window > aw-watcher-window.log 2>&1 &
     nohup ./aw-server/aw-server > aw-server.log 2>&1 &
     cd
 
-    notify-send "ActivityWatch started"   
+    notify-send "ActivityWatch started"
 }
 
 awq() {
     pkill aw-
-    notify-send "ActivityWatch killed"    
+    notify-send "ActivityWatch killed"
 }
 
 dot() {
@@ -258,8 +258,13 @@ dot() {
     nvim .
 }
 
+lrnstc() {
+  export GIT_SSH_COMMAND="ssh -i ~/.ssh/learnistic -o IdentitiesOnly=yes"
+}
+
 bindkey -s ^f "tmux-sessionizer\n"
-bindkey -s ^k "tmux kill-server\n"
+bindkey -s ^g "tmux-session-fzf\n"
+bindkey -s ^k "tmux kill-session\n"
 
 eval "$(starship init zsh)"
 
