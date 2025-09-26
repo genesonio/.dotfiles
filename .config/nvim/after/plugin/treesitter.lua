@@ -9,6 +9,12 @@ vim.defer_fn(function()
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
     auto_install = false,
 
+    sync_install = false,
+
+    modules = {},
+
+    ignore_install = {},
+
     highlight = { enable = true },
     indent = { enable = true },
     incremental_selection = {

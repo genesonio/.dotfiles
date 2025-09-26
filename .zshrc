@@ -114,8 +114,6 @@ alias vim=nvim
 
 alias ls="ls -la -h"
 
-alias gpod="git pull origin dev"
-
 alias tm=tmux
 
 # alias air="/home/genesio/go/bin/air"
@@ -123,10 +121,18 @@ alias tm=tmux
 # alias templ="/home/genesio/go/bin/templ"
 
 update() {
-    sudo apt update
-    sudo apt upgrade
-    sudo apt autoremove
-    sudo apt autopurge
+    sudo apt update -y
+    sudo apt upgrade -y
+    sudo apt autoremove -y
+    sudo apt autopurge -y
+}
+
+bye() {
+    sudo apt update -y
+    sudo apt upgrade -y
+    sudo apt autoremove -y
+    sudo apt autopurge -y
+    shutdown -h now
 }
 
 so() {
@@ -237,29 +243,21 @@ jcurl() {
     curl $@ | jq
 }
 
-aw() {
-    cd ~/.local/opt/activitywatch
-
-    nohup ./aw-watcher-afk/aw-watcher-afk > aw-watcher-afk.log 2>&1 &
-    nohup ./aw-watcher-window/aw-watcher-window > aw-watcher-window.log 2>&1 &
-    nohup ./aw-server/aw-server > aw-server.log 2>&1 &
-    cd
-
-    notify-send "ActivityWatch started"
-}
-
-awq() {
-    pkill aw-
-    notify-send "ActivityWatch killed"
-}
-
 dot() {
     cd ~/.dotfiles
     nvim .
 }
 
-lrnstc() {
+lrn() {
   export GIT_SSH_COMMAND="ssh -i ~/.ssh/learnistic -o IdentitiesOnly=yes"
+}
+
+git() {
+  if [ "$1" = fetch ]; then
+    shift
+    set -- fetch --all "$@"
+  fi
+  command git "$@"
 }
 
 bindkey -s ^f "tmux-sessionizer\n"
@@ -287,7 +285,7 @@ case ":$PATH:" in
 esac
 # pnpm end
 
-export PATH="$PATH:/opt/nvim-linux64/bin"
+export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
