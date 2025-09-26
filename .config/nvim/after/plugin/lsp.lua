@@ -87,7 +87,7 @@ local servers = {
       },
     },
   },
-  tsserver = {},
+  ts_ls = {},
   html = { filetypes = { 'html', 'templ' } },
   htmx = { filetypes = { 'htmx', 'templ', 'html' } },
   lua_ls = {
