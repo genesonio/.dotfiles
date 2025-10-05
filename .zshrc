@@ -120,24 +120,15 @@ alias tm=tmux
 
 # alias templ="/home/genesio/go/bin/templ"
 
-update() {
-    sudo apt update -y
-    sudo apt upgrade -y
-    sudo apt autoremove -y
-    sudo apt autopurge -y
-}
-
 bye() {
-    sudo apt update -y
-    sudo apt upgrade -y
-    sudo apt autoremove -y
-    sudo apt autopurge -y
     shutdown -h now
 }
 
 so() {
   source ~/.zshrc
-  source ~/.profile
+  if [ -f ~/.profile ]; then
+    source ~/.profile
+  fi
 }
 
 ssc() {
@@ -159,6 +150,10 @@ tmc() {
 
 zsc() {
   nvim ~/.zshrc
+}
+
+hyprc() {
+  nvim ~/.config/hypr/hyprland.conf
 }
 
 n() {
@@ -266,10 +261,9 @@ bindkey -s ^k "tmux kill-session\n"
 
 eval "$(starship init zsh)"
 
-export NVM_DIR="$HOME/.nvm"
+export NVM_DIR="$HOME/.config/nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
 
 # Turso
 export PATH="/home/genesio/.turso:$PATH"
