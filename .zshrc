@@ -120,6 +120,8 @@ alias tm=tmux
 
 # alias templ="/home/genesio/go/bin/templ"
 
+alias wbr="pkill waybar && hyprctl dispatch exec waybar"
+
 bye() {
     shutdown -h now
 }
