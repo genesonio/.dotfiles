@@ -9,13 +9,15 @@
 
 #waybar {
   background: #111;
-  margin: 0px 2px;
+  margin: 20px;
   color: #c6d0f5;
+  padding-left: 0px;
+  padding-right: 0px;
 }
 
 #workspaces {
   border-radius: 2px 0px 0px 2px;
-  margin: 2px 0px 2px 0px;
+  margin: 2px 0px;
   background: #111;
   margin-left: 2px;
 }
