@@ -240,6 +240,10 @@ jcurl() {
     curl $@ | jq
 }
 
+sshl() {
+  ssh -i ~/.ssh/learnistic "$@"
+}
+
 dot() {
     cd ~/.dotfiles
     nvim .
