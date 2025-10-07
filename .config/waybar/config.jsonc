@@ -16,11 +16,12 @@
     "network",
     "cpu",
     "memory",
+    "tray",
     "custom/lock"
   ],
 
   "hyprland/workspaces": {
-    "format": "{name}: {icon}",
+    "format": "{icon}",
     "format-icons": {
       "active": "",
       "default": ""
@@ -33,7 +34,7 @@
   },
 
   "tray": {
-    "icon-size": 16,
+    "icon-size": 12,
     "spacing": 10
   },
 
@@ -49,13 +50,13 @@
 
   "clock": {
     "timezone": "America/Brasilia",
-    "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+    "tooltip-format": "<big>{:%Y %B}</big>\n<big><tt>{calendar}</tt></big>",
     "format": "{:%d/%m/%Y - %H:%M}",
     "interval": 1
   },
 
   "network": {
-    "format-wifi": "󰤢 ",
+    "format-wifi": "{frequency}󰤢  {essid}",
     "format-ethernet": "󰈀 ",
     "format-disconnected": "󰤠 ",
     "interval": 5,
@@ -79,7 +80,8 @@
     "format-icons": {
       "default": ["", "", " "]
     },
-    "on-click": "pavucontrol"
+    "on-click": "pavucontrol",
+    "tooltip": false
   },
 
   "custom/lock": {
