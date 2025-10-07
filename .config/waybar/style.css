@@ -1,6 +1,7 @@
 * {
   font-family: FiraCode Nerd Font, sans-serif;
   font-size: 12px;
+  font-weight: 500;
   min-height: 0;
   padding-right: 2px;
   padding-left: 2px;
@@ -8,7 +9,7 @@
 }
 
 #waybar {
-  background: #111;
+  background: rgba(17, 17, 17, 0.7);
   margin: 20px;
   color: #c6d0f5;
   padding-left: 0px;
@@ -16,15 +17,11 @@
 }
 
 #workspaces {
-  border-radius: 2px 0px 0px 2px;
   margin: 2px 0px;
-  background: #111;
-  margin-left: 2px;
 }
 
 #workspaces button {
   color: #babbf1;
-  border-radius: 2px;
   padding: 0.4rem;
 }
 
@@ -33,21 +30,19 @@
   border-radius: 2px;
 }
 
-button {
+/* button {
   background: transparent;
-}
+} */
 
 #workspaces button:hover {
-  background: #1e1e1e;
-  border: 0px solid transparent;
+  background: transparent;
 }
 
 #window {
   border-radius: 0px 2px 2px 0px;
   padding: 0px 2px 0px 3px;
   margin: 2px 0px 2px 0px;
-  background: #111;
-  color: #666;
+  color: #CACACA;
 }
 
 #custom-music,
@@ -64,9 +59,14 @@ button {
 #custom-weather,
 #custom-uptime,
 #custom-docker {
-  background-color: #111;
-  padding: 0.5rem 1rem;
+  /* background-color: #111; */
+  padding: 0 1rem;
   margin: 2px 0;
+}
+
+#network {
+  font-size: 14px;
+  padding: 0px;
 }
 
 #clock {
