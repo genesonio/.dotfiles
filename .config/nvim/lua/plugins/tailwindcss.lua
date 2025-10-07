@@ -1,8 +1,9 @@
+-- tailwind-autosort.lua
 return {
-  {
-    'laytan/tailwind-sorter.nvim',
-    dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-lua/plenary.nvim' },
-    build = 'cd formatter && npm ci && npm run build',
-    config = true,
-  },
+  "y3owk1n/tailwind-autosort.nvim",
+  version = "*", -- remove this if you want to follow `main` branch
+  event = "VeryLazy",
+  dependencies = { "nvim-treesitter/nvim-treesitter" },
+  ---@type TailwindAutoSort.Config
+  opts = {} -- your configuration
 }
