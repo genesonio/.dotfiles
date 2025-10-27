@@ -262,18 +262,17 @@ git() {
 }
 
 cam() {
-  # require adb
   command -v adb >/dev/null 2>&1 || { echo "adb not found"; return 1; }
 
-  # build list: <serial>\t<full line> so we can cut the serial after selection
+  # Build list: serial + model
   local choice serial
-  choice=$(adb devices -l | tail -n +2 | awk 'NF{print $1"\t"$0}' \
-    | fzf --height=40% --ansi \
-          --preview 'adb -s {1} shell getprop ro.product.model 2>/dev/null || true' \
-          --preview-window=right:50% \
-          --prompt="Select device: ") || return 1
+  choice=$(adb devices -l | tail -n +2 | awk 'NF{print $1}' | while read -r s; do
+    model=$(adb -s "$s" shell getprop ro.product.model 2>/dev/null)
+    echo "$s  $model"
+  done | fzf --height=100% --ansi --prompt="Select device: ") || return 1
 
-  serial=$(printf '%s' "$choice" | cut -f1)
+  # Extract serial from the selection (first word)
+  serial=${choice%% *}
   if [ -z "$serial" ]; then
     echo "No device selected."
     return 1
