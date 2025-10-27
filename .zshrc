@@ -261,6 +261,36 @@ git() {
   command git "$@"
 }
 
+cam() {
+  # require adb
+  command -v adb >/dev/null 2>&1 || { echo "adb not found"; return 1; }
+
+  # build list: <serial>\t<full line> so we can cut the serial after selection
+  local choice serial
+  choice=$(adb devices -l | tail -n +2 | awk 'NF{print $1"\t"$0}' \
+    | fzf --height=40% --ansi \
+          --preview 'adb -s {1} shell getprop ro.product.model 2>/dev/null || true' \
+          --preview-window=right:50% \
+          --prompt="Select device: ") || return 1
+
+  serial=$(printf '%s' "$choice" | cut -f1)
+  if [ -z "$serial" ]; then
+    echo "No device selected."
+    return 1
+  fi
+
+  scrcpy --serial "$serial" \
+    --video-source=camera \
+    --camera-facing=back \
+    --camera-size=1920x1080 \
+    --video-bit-rate=8M \
+    --max-fps=60 \
+    --v4l2-sink=/dev/video0 \
+    --no-window \
+    --no-audio \
+    --no-playback
+}
+
 bindkey -s ^f "tmux-sessionizer\n"
 bindkey -s ^g "tmux-session-fzf\n"
 bindkey -s ^k "tmux kill-session\n"
@@ -289,3 +319,11 @@ export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
