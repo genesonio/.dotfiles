@@ -23,7 +23,11 @@
 }
 
 #workspaces button.active {
-  color: #99d1db;
+  color: #99D1DB;
+}
+
+#workspaces .urgent {
+  color: #DE3C3C;
 }
 
 button {
