@@ -116,6 +116,8 @@ alias ls="ls -la -h"
 
 alias tm=tmux
 
+alias tmk="tmux kill-session"
+
 # alias air="/home/genesio/go/bin/air"
 
 # alias templ="/home/genesio/go/bin/templ"
@@ -292,7 +294,7 @@ cam() {
 
 bindkey -s ^f "tmux-sessionizer\n"
 bindkey -s ^g "tmux-session-fzf\n"
-bindkey -s ^k "tmux kill-session\n"
+# bindkey -s ^k "tmux kill-session\n"
 
 eval "$(starship init zsh)"
 
