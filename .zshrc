@@ -294,11 +294,13 @@ cam() {
     --camera-size=1920x1080 \
     --video-bit-rate=8M \
     --max-fps=60 \
-    --v4l2-sink=/dev/video0 \
+    --v4l2-sink=/dev/video1 \
     --no-window \
     --no-audio \
     --no-playback
 }
+
+bindkey -v
 
 bindkey -s ^f "tmux-sessionizer\n"
 bindkey -s ^g "tmux-session-fzf\n"
