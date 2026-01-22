@@ -185,8 +185,6 @@ pm() {
         pnpm "$@"
     elif [ -f package-lock.json ]; then
         npm "$@"
-    elif [ -f pnpm-lock.yaml ]; then
-        pnpm "$@"
     elif [ -f bun.lockb ]; then
         bun "$@"
     fi
