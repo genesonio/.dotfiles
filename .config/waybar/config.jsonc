@@ -40,13 +40,13 @@
   },
 
   "custom/music": {
-    "format": "  {}",
+    "format": " ",
     "escape": true,
     "interval": 5,
     "tooltip": false,
     "exec": "playerctl metadata --format='{{ artist }} - {{ title }}'",
     "on-click": "playerctl play-pause",
-    "max-length": 25
+    "max-length": 2
   },
 
   "clock": {
@@ -102,6 +102,6 @@
   "custom/lock": {
     "tooltip": false,
     "on-click": "sh -c '(sleep 0.5s; hyprlock --grace 0)'",
-    "format": ""
+    "format": " "
   }
 }

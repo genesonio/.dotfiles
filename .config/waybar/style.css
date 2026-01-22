@@ -1,5 +1,5 @@
 * {
-  font-family: FiraCode Nerd Font, sans-serif;
+  font-family: 'FiraCode Nerd Font', sans-serif;
   font-size: 12px;
   font-weight: 500;
   min-height: 0;
@@ -7,23 +7,26 @@
 }
 
 #waybar {
-  background: rgba(17, 17, 17, 0.9);
-  color: #c6d0f5;
+  background: transparent;
+  color: #bb9af7;
 }
 
-#workspaces {
-  margin-left: 2px;
+#waybar>box {
+  background: rgba(26, 27, 38, 0.95);
+  margin: 1px 2px 0px 2px;
+  border-radius: 5px;
+  padding: 1px 0px 1px 2px;
 }
 
 #workspaces button {
-  color: #babbf1;
+  color: #7aa2f7;
   padding: 2px 0px 2px 0px;
   margin-right: 2px;
   border: none;
 }
 
 #workspaces button.active {
-  color: #99D1DB;
+  color: #7DCFFF;
 }
 
 #workspaces .urgent {
@@ -36,8 +39,12 @@ button {
 
 #workspaces button:hover {
   background: transparent;
-  border: 0px;
-  border-top: 0px;
+  border: none;
+  box-shadow: none;
+  transition: none;
+  text-shadow: none;
+
+  color: #7DCFFF;
 }
 
 #pulseaudio,
@@ -60,32 +67,14 @@ button {
 }
 
 #clock {
-  color: #8caaee;
+  color: #7aa2f7;
 }
-
-#battery {
-  color: #a6d189;
-}
-
-#battery.charging {
-  color: #a6d189;
-}
-
 
 #pulseaudio {
-  color: #ea999c;
-}
-
-#custom-docker {
-  color: #85c1dc;
+  color: #f7768e;
 }
 
 #custom-music {
-  color: #ca9ee6;
-}
-
-#custom-lock {
-  color: #babbf1;
-  margin-right: 10px;
+  color: #bb9af7;
 }
 
