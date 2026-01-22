@@ -6,9 +6,12 @@ return {
       style = "night", -- or "storm", etc.
       transparent = true,
       styles = {
-        floats = "transparent",
+        -- floats = "transparent",
         -- sidebars = "transparent",
       },
+      on_colors = function(colors)
+        colors.fg_gutter = "#666666"
+      end
     })
     vim.cmd [[colorscheme tokyonight]]
   end,
