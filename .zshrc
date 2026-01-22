@@ -125,7 +125,17 @@ alias tmk="tmux kill-session"
 alias wbr="pkill waybar && hyprctl dispatch exec waybar"
 
 bye() {
-    shutdown -h now
+  echo "Updating system..."
+  if ! yay --noconfirm -Syu; then
+    echo "❌ Update failed — aborting shutdown."
+    return 1
+  fi
+
+  echo "Bye bye!"
+  sleep 2
+
+  echo "Shutting down..."
+  shutdown -h now
 }
 
 so() {
