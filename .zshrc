@@ -260,7 +260,8 @@ dot() {
 }
 
 lrn() {
-  export GIT_SSH_COMMAND="ssh -i ~/.ssh/learnistic -o IdentitiesOnly=yes"
+  eval "$(ssh-agent -s)"
+  ssh-add ~/.ssh/learnistic
 }
 
 git() {
