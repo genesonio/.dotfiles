@@ -212,17 +212,17 @@ require('mason-lspconfig').setup({
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
 local cmp = require 'cmp'
-local luasnip = require 'luasnip'
-luasnip.config.set_config { history = false, updateevents = 'TextChanged,TextChangedI' }
+-- local luasnip = require 'luasnip'
+-- luasnip.config.set_config { history = false, updateevents = 'TextChanged,TextChangedI' }
 -- require('luasnip.loaders.from_vscode').lazy_load()
-luasnip.config.setup {}
+-- luasnip.config.setup {}
 
 cmp.setup {
-  snippet = {
-    expand = function(args)
-      luasnip.lsp_expand(args.body)
-    end,
-  },
+  -- snippet = {
+  --   expand = function(args)
+  --     luasnip.lsp_expand(args.body)
+  --   end,
+  -- },
   completion = {
     completeopt = 'menu,menuone,noinsert'
   },
