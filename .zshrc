@@ -264,6 +264,11 @@ lrn() {
   ssh-add ~/.ssh/learnistic
 }
 
+pvt() {
+  eval "$(ssh-agent -s)"
+  ssh-add ~/.ssh/id_ed25519
+}
+
 git() {
   if [ "$1" = fetch ]; then
     shift
@@ -339,3 +344,7 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+
+# opencode
+export PATH=/home/genesonio/.opencode/bin:$PATH
+export PATH="$HOME/.local/bin:$PATH"
