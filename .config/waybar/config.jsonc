@@ -17,7 +17,8 @@
     "cpu",
     "memory",
     "tray",
-    "custom/lock"
+    "custom/lock",
+    "custom/shutdown"
   ],
 
   "hyprland/workspaces": {
@@ -103,5 +104,11 @@
     "tooltip": false,
     "on-click": "sh -c '(sleep 0.5s; hyprlock --grace 0)'",
     "format": " "
+  },
+
+  "custom/shutdown": {
+    "tooltip": false,
+    "on-click": "systemctl poweroff",
+    "format": " "
   }
 }

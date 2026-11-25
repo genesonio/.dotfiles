@@ -170,6 +170,10 @@ hyprc() {
   nvim ~/.config/hypr/hyprland.conf
 }
 
+wbrc() {
+  nvim ~/.config/waybar/config
+}
+
 n() {
   nvim .
 }
@@ -185,7 +189,7 @@ pm() {
         pnpm "$@"
     elif [ -f package-lock.json ]; then
         npm "$@"
-    elif [ -f bun.lockb ]; then
+    elif [ -f bun.lock ]; then
         bun "$@"
     fi
 }
@@ -199,7 +203,7 @@ dpm() {
         doppler run -- npm "$@"
     elif [ -f pnpm-lock.yaml ]; then
         doppler run -- pnpm "$@"
-    elif [ -f bun.lockb ]; then
+    elif [ -f bun.lock ]; then
         doppler run -- bun "$@"
     else
       echo "No package manager found"
@@ -304,6 +308,14 @@ cam() {
     --no-window \
     --no-audio \
     --no-playback
+}
+
+jogos() {
+  sudo mount -t ntfs-3g /dev/sdc1 /mnt/jogos
+}
+
+notify-end() {
+  paplay /usr/share/sounds/freedesktop/stereo/complete.oga & notify-send "Done" "$1"
 }
 
 bindkey -v

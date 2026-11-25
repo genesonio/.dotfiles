@@ -53,7 +53,8 @@ button {
 #cpu,
 #memory,
 #tray,
-#custom-lock {
+#custom-lock,
+#custom-shutdown {
   margin: 0px 4px;
 }
 

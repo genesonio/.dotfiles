@@ -3,13 +3,14 @@ vim.opt.relativenumber = true
 
 vim.g.have_nerd_font = true
 
-vim.opt.smartindent = true
 vim.o.ignorecase = true
 vim.o.smartcase = true
 vim.opt.tabstop = 2
 vim.opt.softtabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.expandtab = true
+-- Neovim's Go ftplugin forces tabs (noexpandtab, ts=4); keep our spaces instead
+vim.g.go_recommended_style = 0
 -- vim.opt.colorcolumn = "90"
 
 vim.opt.swapfile = false
@@ -26,7 +27,10 @@ vim.opt.scrolloff = 8
 vim.opt.isfname:append("@-@")
 
 
-vim.opt.updatetime = 50
+vim.opt.updatetime = 150
+
+-- Defold scripts are Lua
+vim.filetype.add({ extension = { script = "lua" } })
 
 vim.o.signcolumn = "yes"
 
@@ -35,7 +39,8 @@ vim.o.breakindent = true
 
 vim.o.cmdheight = 1
 
-vim.opt.diffopt = "iblank,vertical,internal"
+-- append to the defaults (internal,filler,closeoff,linematch:40) instead of replacing them
+vim.opt.diffopt:append({ "iblank", "vertical" })
 
 --------------
 --- MACROS ---

@@ -1,21 +1,25 @@
+local function nav(n)
+  return function()
+    require("harpoon.ui").nav_file(n)
+  end
+end
+
 return {
   "theprimeagen/harpoon",
-  config = function()
+  opts = function()
     local win_width = vim.api.nvim_win_get_width(0)
-    require("harpoon").setup({
+    return {
       menu = {
-        width = math.floor(win_width - (win_width / 2)),
+        width = math.floor(win_width / 2),
       },
-    })
-    local mark = require("harpoon.mark")
-    local ui = require("harpoon.ui")
-
-    vim.keymap.set("n", "<leader>a", mark.add_file)
-    vim.keymap.set("n", "<C-e>", ui.toggle_quick_menu)
-
-    vim.keymap.set("n", "<C-g>", function() ui.nav_file(1) end)
-    vim.keymap.set("n", "<C-b>", function() ui.nav_file(2) end)
-    vim.keymap.set("n", "<C-h>", function() ui.nav_file(3) end)
-    vim.keymap.set("n", "<C-n>", function() ui.nav_file(4) end)
-  end
+    }
+  end,
+  keys = {
+    { "<leader>a", function() require("harpoon.mark").add_file() end, desc = "Harpoon [A]dd file" },
+    { "<C-e>", function() require("harpoon.ui").toggle_quick_menu() end, desc = "Harpoon menu" },
+    { "<C-g>", nav(1), desc = "Harpoon file 1" },
+    { "<C-b>", nav(2), desc = "Harpoon file 2" },
+    { "<C-h>", nav(3), desc = "Harpoon file 3" },
+    { "<C-n>", nav(4), desc = "Harpoon file 4" },
+  },
 }

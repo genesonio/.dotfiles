@@ -1,21 +1,19 @@
 return {
-  'stevearc/oil.nvim',
-  opts = {},
-  -- Optional dependencies
+  "stevearc/oil.nvim",
+  -- not lazy so `nvim .` opens oil instead of netrw
+  lazy = false,
   dependencies = { "nvim-tree/nvim-web-devicons" },
-  config = function()
-    require('oil').setup({
-      columns = {
-        "icon",
-      },
-      keymaps = {
-        ["<C-h>"] = false
-      },
-      view_options = {
-        show_hidden = true
-      }
-    })
-    vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
-    vim.keymap.set("n", "<leader>pv", "<CMD>Oil<CR>", { desc = "Open parent directory" })
-  end
+  opts = {
+    columns = { "icon" },
+    keymaps = {
+      ["<C-h>"] = false, -- leave it for harpoon
+    },
+    view_options = {
+      show_hidden = true,
+    },
+  },
+  keys = {
+    { "-", "<CMD>Oil<CR>", desc = "Open parent directory" },
+    { "<leader>pv", "<CMD>Oil<CR>", desc = "Open parent directory" },
+  },
 }

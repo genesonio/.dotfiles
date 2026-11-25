@@ -28,7 +28,7 @@ vim.keymap.set("n", "<leader>wp", ":tabprev<CR>")
 vim.keymap.set("n", "<C-j>", "<C-w><C-j>")
 vim.keymap.set("n", "<C-k>", "<C-w><C-k>")
 vim.keymap.set("n", "<C-l>", "<C-w><C-l>")
-vim.keymap.set("n", "<C-h>", "<C-w><C-h>")
+-- <C-h> belongs to harpoon (file 3)
 
 -- Godtier sort json
 vim.keymap.set("v", "<leader>sj", ":'<,'>!python3 -m json.tool --sort-keys --no-ensure-ascii<CR>gv=")
@@ -42,6 +42,6 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   desc = "Highlight when yanking (copying) text",
   group = vim.api.nvim_create_augroup("HighlightYank", { clear = true }),
   callback = function()
-    vim.highlight.on_yank()
+    vim.hl.on_yank()
   end,
 })
