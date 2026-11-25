@@ -5,7 +5,6 @@ hl.monitor({ output = "desc:Samsung Electric Company S24D332 0x59325956", mode =
 
 local terminal    = "kitty"
 local fileManager = "thunar"
-local menu        = 'pkill rofi || rofi -show drun -modi "drun,calc"'
 
 hl.on("hyprland.start", function()
     hl.exec_cmd("hyprlock || uwsm stop")
@@ -113,7 +112,9 @@ hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 hl.bind(mainMod .. " + M", hl.dsp.window.fullscreen())
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
-hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(menu))
+hl.bind(mainMod .. " + R", hl.dsp.exec_cmd("$HOME/.local/bin/vicinae toggle"))
+hl.bind(mainMod .. " + SHIFT + V", hl.dsp.exec_cmd("$HOME/.local/bin/vicinae deeplink vicinae://launch/clipboard/history"))
+hl.bind(mainMod .. " + period", hl.dsp.exec_cmd("$HOME/.local/bin/vicinae deeplink vicinae://launch/core/search-emojis"))
 
 hl.bind(mainMod .. " + SHIFT + Q", hl.dsp.exec_cmd([[kill -9 "$(hyprctl activewindow -j | jq -r .pid)"]]))
 
@@ -169,6 +170,9 @@ end
 for ws = 7, 10 do
     hl.workspace_rule({ workspace = tostring(ws), monitor = "DP-3", persistent = false })
 end
+
+hl.layer_rule({ match = { namespace = "vicinae" }, name = "vicinae-blur", blur = true, ignore_alpha = 0 })
+hl.layer_rule({ match = { namespace = "vicinae" }, name = "vicinae-no-animation", no_anim = true })
 
 hl.window_rule({ name = "slack-ws3",   match = { class = "^(slack)$" },   workspace = "3 silent" })
 hl.window_rule({ name = "salinha-ws5", match = { class = "^(salinha)$" }, workspace = "5 silent" })

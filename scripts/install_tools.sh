@@ -24,7 +24,7 @@ PACMAN_PKGS=(
   docker docker-compose docker-buildx
 
   # Tools used by .zshrc functions
-  openssh speedtest-cli scrcpy android-tools v4l2loopback-dkms linux-headers ntfs-3g
+  pacman-contrib openssh speedtest-cli scrcpy android-tools v4l2loopback-dkms linux-headers ntfs-3g
 
   flatpak
 )
@@ -33,6 +33,7 @@ MANUAL=(
   "ngrok   - not in pacman/Flathub: https://ngrok.com/download"
   "doppler - not in pacman/Flathub: https://docs.doppler.com/docs/install-cli"
   "hyprcap - not in pacman/Flathub (SUPER+SHIFT+R): https://github.com/alonso-herreros/hyprcap"
+  "vicinae - not in pacman/Flathub (SUPER+R, clipboard SUPER+SHIFT+V, emoji SUPER+.): read https://vicinae.com/install, run it with --prefix ~/.local, then systemctl --user enable --now vicinae.service"
   "$HOME/wallpapers/default.png - used by hyprpaper and hyprlock"
   "Private shell functions go in ~/.zshrc.local; SSH hosts in ~/.ssh/config"
 )
@@ -48,13 +49,22 @@ flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.f
 echo "==> Linking dotfiles"
 # A real ~/.local/bin stops stow from folding it into a symlink to the repo,
 # which would make installers drop their binaries inside the dotfiles.
-mkdir -p "$HOME/.local/bin" "$HOME/.config/systemd/user"
+mkdir -p "$HOME/.local/bin" "$HOME/.config/systemd/user" "$HOME/.config/vicinae"
 stow -d "$DOTFILES" -t "$HOME" .
 
 echo "==> Enabling session services (started by the uwsm session)"
 systemctl --user enable waybar.service hyprpaper.service hypridle.service hyprpolkitagent.service ssh-agent.socket
 
 git -C "$DOTFILES" config core.hooksPath .githooks
+
+echo "==> Seeding vicinae settings and web search shortcuts (vicinae rewrites both, so they are copied, not stowed)"
+[ -f "$HOME/.config/vicinae/settings.json" ] || printf '{\n  "imports": ["./dotfiles.jsonc"]\n}\n' > "$HOME/.config/vicinae/settings.json"
+mkdir -p "$HOME/.local/share/vicinae/shortcuts"
+cp -n "$DOTFILES/scripts/vicinae-shortcuts.json" "$HOME/.local/share/vicinae/shortcuts/shortcuts.json"
+
+echo "==> Dark mode for GTK, Electron, Flatpak apps and websites (via xdg-desktop-portal)"
+gsettings set org.gnome.desktop.interface color-scheme prefer-dark
+gsettings set org.gnome.desktop.interface gtk-theme Adwaita-dark
 
 echo "==> Installing oh-my-zsh"
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
@@ -75,7 +85,7 @@ sudo usermod -aG docker "$USER"
 echo "==> Installing system config files (SDDM autologin, v4l2loopback for cam)"
 sudo cp -r --no-preserve=ownership "$DOTFILES/etc/." /etc/
 sudo sed -i "s/^User=.*/User=$USER/" /etc/sddm.conf.d/autologin.conf
-sudo systemctl enable sddm.service
+sudo systemctl enable sddm.service paccache.timer
 sudo modprobe v4l2loopback
 
 echo "==> Installing Node LTS with fnm"

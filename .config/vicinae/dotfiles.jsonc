@@ -1,0 +1,39 @@
+{
+  "telemetry": { "system_info": false },
+
+  "theme": {
+    "light": { "name": "tokyo-night" },
+    "dark": { "name": "tokyo-night" }
+  },
+
+  // snippets/paste-to-window need setcap on the input server; copy fallback is enough
+  "input_server": { "enabled": false },
+
+  "escape_key_behavior": "close_window",
+  "pop_to_root_on_close": true,
+
+  "tray": { "enabled": false },
+  "updates": { "show_notice": false },
+  "favorites": [],
+
+  // only the search bar until you type; clipboard and emoji have their own binds
+  "launcher_window": { "compact_mode": { "enabled": true } },
+
+  "fallbacks": ["shortcuts:google", "files:search"],
+
+  // ids match scripts/vicinae-shortcuts.json
+  "providers": {
+    "shortcuts": {
+      "entrypoints": {
+        "google": { "alias": "!g" },
+        "youtube": { "alias": "!yt" },
+        "github": { "alias": "!gh" }
+      }
+    },
+    "clipboard": {
+      "entrypoints": {
+        "history": { "alias": "cb" }
+      }
+    }
+  }
+}

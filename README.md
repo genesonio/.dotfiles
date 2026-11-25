@@ -18,7 +18,7 @@ Log out and back in when it finishes.
 | Path | What |
 |---|---|
 | `.config/hypr/` | Hyprland (`hyprland.lua`), hypridle, hyprlock, hyprpaper |
-| `.config/waybar/`, `.config/rofi/`, `.config/kitty/` | Bar, launcher, terminal |
+| `.config/waybar/`, `.config/rofi/`, `.config/vicinae/`, `.config/kitty/` | Bar, launchers, terminal |
 | `.config/nvim/` | Neovim (lazy.nvim, `lazy-lock.json` pins plugins) |
 | `.zshrc`, `.tmux.conf`, `.scripts/` | Shell, tmux and the tmux session pickers |
 | `etc/` | System files copied to `/etc` (SDDM autologin, v4l2loopback) — not stowed |

@@ -1,0 +1,5 @@
+[
+  { "id": "google", "name": "Google", "icon": "icon://favicon/google.com", "url": "https://www.google.com/search?q={argument}", "app": "default" },
+  { "id": "youtube", "name": "YouTube", "icon": "icon://favicon/youtube.com", "url": "https://www.youtube.com/results?search_query={argument}", "app": "default" },
+  { "id": "github", "name": "GitHub", "icon": "icon://favicon/github.com", "url": "https://github.com/search?q={argument}", "app": "default" }
+]
