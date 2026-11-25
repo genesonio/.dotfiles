@@ -7,7 +7,7 @@ PACMAN_PKGS=(
   # Hyprland desktop
   hyprland hypridle hyprlock hyprpaper hyprpicker hyprpolkitagent uwsm sddm
   xdg-desktop-portal-hyprland xdg-desktop-portal-gtk qt5-wayland qt6-wayland
-  waybar rofi rofi-calc kitty thunar flameshot dunst libnotify
+  waybar kitty thunar flameshot dunst libnotify
   wl-clipboard jq brightnessctl playerctl
 
   # Audio
@@ -49,7 +49,7 @@ flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.f
 echo "==> Linking dotfiles"
 # A real ~/.local/bin stops stow from folding it into a symlink to the repo,
 # which would make installers drop their binaries inside the dotfiles.
-mkdir -p "$HOME/.local/bin" "$HOME/.config/systemd/user" "$HOME/.config/vicinae"
+mkdir -p "$HOME/.local/bin" "$HOME/.config/systemd/user" "$HOME/.config/vicinae" "$HOME/.config/uwsm"
 stow -d "$DOTFILES" -t "$HOME" .
 
 echo "==> Enabling session services (started by the uwsm session)"

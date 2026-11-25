@@ -1,0 +1,2 @@
+# Session environment for everything uwsm starts (Hyprland binds, waybar, other user services)
+export PATH="$HOME/.local/bin:$PATH"

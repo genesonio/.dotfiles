@@ -164,7 +164,7 @@ zsc() {
 }
 
 hyprc() {
-  nvim ~/.config/hypr/hyprland.conf
+  nvim ~/.config/hypr/hyprland.lua
 }
 
 wbrc() {
@@ -291,6 +291,15 @@ cam() {
 
 jogos() {
   sudo mount -t ntfs-3g UUID=4E24DDB424DD9F71 /mnt/jogos
+}
+
+# vicinae has no package; review the install script before it runs
+vup() {
+  local f
+  f=$(mktemp) || return
+  curl -fsSL https://vicinae.com/install -o "$f" && less "$f" &&
+    read -q "?Run it? [y/N] " && echo && bash "$f" --prefix ~/.local
+  rm -f "$f"
 }
 
 notify-end() {

@@ -104,7 +104,7 @@
 
   "custom/shutdown": {
     "tooltip": false,
-    "on-click": "printf 'No\\nYes' | rofi -dmenu -p 'Shut down?' | grep -qx Yes && systemctl poweroff",
+    "on-click": "printf 'No\\nYes' | $HOME/.local/bin/vicinae dmenu -n 'Shut down?' --no-section --no-footer -H 200 | grep -qx Yes && systemctl poweroff",
     "format": " "
   }
 }
