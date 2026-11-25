@@ -3,7 +3,7 @@
 if [[ $# -eq 1 ]]; then
     selected=$1
 else
-    selected=$(tmux ls -F '#S   #{?session_attached,(attached),}' | fzf)
+    selected=$(tmux ls -F '#S   #{?session_attached,(attached),}' 2>/dev/null | fzf)
 fi
 
 if [[ -z $selected ]]; then

@@ -1,185 +1,80 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
-# Function to install zsh
-install_zsh() {
-  echo "Installing zsh..."
-  if command -v apt > /dev/null; then
-    sudo apt update && sudo apt install -y zsh
-  elif command -v apt-get > /dev/null; then
-    sudo apt-get update && sudo apt-get install -y zsh
-  elif command -v snap > /dev/null; then
-    sudo snap install zsh --classic
-  else
-    echo "Package manager not supported. Please install zsh manually."
-  fi
-  echo "zsh installed!"
-}
+DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
-# Function to make zsh the default shell
-make_zsh_default() {
-  echo "Making zsh the default shell..."
-  chsh -s $(which zsh)
-  echo "zsh is now the default shell. Please log out and log back in for the changes to take effect."
-}
+PACMAN_PKGS=(
+  # Hyprland desktop
+  hyprland hypridle hyprlock hyprpaper hyprpicker
+  xdg-desktop-portal-hyprland xdg-desktop-portal-gtk qt5-wayland qt6-wayland
+  waybar rofi rofi-calc kitty thunar flameshot dunst libnotify
+  wl-clipboard jq brightnessctl playerctl
 
-# Function to install oh-my-zsh
-install_oh_my_zsh() {
-  echo "Installing oh-my-zsh..."
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-  echo "oh-my-zsh installed!"
-}
+  # Audio
+  pipewire pipewire-pulse pipewire-alsa wireplumber libpulse pavucontrol sound-theme-freedesktop
 
-# Function to install zsh plugins
-install_zsh_plugins() {
-  echo "Installing zsh plugins..."
-  git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
-  git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
-  git clone https://github.com/junegunn/fzf.git ~/.oh-my-zsh/custom/plugins/fzf
-  ~/.oh-my-zsh/custom/plugins/fzf/install --all
-  git clone https://github.com/zdharma-continuum/fast-syntax-highlighting ~/.oh-my-zsh/custom/plugins/fast-syntax-highlighting
-  git clone https://github.com/unixorn/fzf-zsh-plugin ~/.oh-my-zsh/custom/plugins/fzf-zsh-plugin
-  git clone https://github.com/popstas/zsh-command-time ~/.oh-my-zsh/custom/plugins/command-time
-  echo "zsh plugins installed!"
-}
+  # Fonts and cursor
+  ttf-firacode-nerd noto-fonts noto-fonts-emoji inter-font adwaita-cursors
 
-# Function to install nvm
-install_nvm() {
-  echo "Installing nvm..."
-  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash  # Load nvm and install the latest stable node
+  # Shell and editor
+  zsh starship tmux fzf ripgrep neovim git stow base-devel unzip curl wget python
 
-  nvm install --lts
-  nvm use --lts
-  echo "nvm installed!"
-}
+  # Web dev
+  nvm nodejs npm pnpm yarn bun typescript go
+  docker docker-compose docker-buildx
 
-install_kitty() {
-  echo "Installing KiTTY"
-  sudo apt install kitty -y
-  echo "KiTTY installed"
-}
+  # Tools used by .zshrc functions
+  openssh speedtest-cli scrcpy android-tools v4l2loopback-dkms linux-headers ntfs-3g
 
-install_starship() {
-  echo "Installing starship"
-  curl -sS https://starship.rs/install.sh | sh
-  echo "Starship installed"
-}
+  flatpak
+)
 
-# Function to install fzf
-install_fzf() {
-  echo "Installing fzf..."
-  git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-  ~/.fzf/install
-  echo "fzf installed!"
-}
+MANUAL=(
+  "ngrok   - not in pacman/Flathub: https://ngrok.com/download"
+  "doppler - not in pacman/Flathub: https://docs.doppler.com/docs/install-cli"
+  "hyprcap - not in pacman/Flathub (SUPER+SHIFT+R): https://github.com/alonso-herreros/hyprcap"
+  "~/wallpapers/default.png - used by hyprpaper and hyprlock"
+)
 
-install_grep() {
-  echo "Installing ripgrep"
-  sudo apt install ripgrep
-  echo "Ripgreg installed"
-}
+[ -f /etc/arch-release ] || { echo "This script is for Arch Linux."; exit 1; }
 
-# Function to install tmux
-install_tmux() {
-  echo "Installing tmux..."
-  if command -v apt > /dev/null; then
-    sudo apt update && sudo apt install -y tmux
-  elif command -v apt-get > /dev/null; then
-    sudo apt-get update && sudo apt-get install -y tmux
-  elif command -v snap > /dev/null; then
-    sudo snap install tmux
-  else
-    echo "Package manager not supported. Please install tmux manually."
-  fi
-  echo "tmux installed!"
-}
+echo "==> Installing pacman packages"
+sudo pacman -Syu --needed --noconfirm "${PACMAN_PKGS[@]}"
 
-# Function to install nvim
-install_nvim() {
-  curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
-  sudo rm -rf /opt/nvim
-  sudo tar -C /opt -xzf nvim-linux64.tar.gz 
-  rm -rf nvim-linux64.tar.gz
-}
+echo "==> Adding Flathub"
+flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
-# Function to install pnpm
-install_pnpm() {
-  echo "Installing pnpm..."
-  curl -fsSL https://get.pnpm.io/install.sh | sh -
-  echo "pnpm installed!"
-}
+echo "==> Linking dotfiles"
+# A real ~/.local/bin stops stow from folding it into a symlink to the repo,
+# which would make installers drop their binaries inside the dotfiles.
+mkdir -p "$HOME/.local/bin"
+stow -d "$DOTFILES" -t "$HOME" .
 
-# Function to install yarn
-install_yarn() {
-  echo "Installing yarn..."
-  if command -v npm > /dev/null; then
-    npm install -g yarn
-  else
-    echo "Npm not found. Please install to proceed."
-  fi
-  echo "yarn installed!"
-}
+echo "==> Installing oh-my-zsh"
+if [ ! -d "$HOME/.oh-my-zsh" ]; then
+  RUNZSH=no CHSH=no KEEP_ZSHRC=yes sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+fi
 
-# Function to install bun
-install_bun() {
-  echo "Installing bun..."
-  curl -fsSL https://bun.sh/install | bash
-  echo "bun installed!"
-}
+ZSH_CUSTOM_PLUGINS="$HOME/.oh-my-zsh/custom/plugins"
+[ -d "$ZSH_CUSTOM_PLUGINS/zsh-syntax-highlighting" ] || git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$ZSH_CUSTOM_PLUGINS/zsh-syntax-highlighting"
+[ -d "$ZSH_CUSTOM_PLUGINS/zsh-autosuggestions" ] || git clone https://github.com/zsh-users/zsh-autosuggestions "$ZSH_CUSTOM_PLUGINS/zsh-autosuggestions"
 
-# Function to install TypeScript globally
-install_typescript() {
-  echo "Installing TypeScript globally..."
-  npm install -g typescript
-  echo "TypeScript installed globally!"
-}
+echo "==> Setting zsh as default shell"
+[ "$SHELL" = "$(command -v zsh)" ] || chsh -s "$(command -v zsh)"
 
-# Function to install Docker
-install_docker() {
-  echo "Installing Docker..."
-  if command -v apt > /dev/null; then
-    sudo apt install docker-compose
-  elif command -v snap > /dev/null; then
-    sudo snap install docker
-  else
-    echo "Package manager not supported. Please install docker manually."
-  fi
-  echo "Docker installed!"
-}
+echo "==> Enabling docker"
+sudo systemctl enable --now docker.service
+sudo usermod -aG docker "$USER"
 
-# Function to install MySQL
-install_mysql() {
-  echo "Installing MySQL..."
-  sudo apt update
-  sudo apt install -y mysql-server
-  echo "MySQL installed!"
-}
+echo "==> Configuring v4l2loopback for cam (phone camera on /dev/video1)"
+echo "v4l2loopback" | sudo tee /etc/modules-load.d/v4l2loopback.conf >/dev/null
+echo 'options v4l2loopback video_nr=1 card_label="Phone Camera" exclusive_caps=1' | sudo tee /etc/modprobe.d/v4l2loopback.conf >/dev/null
+sudo modprobe v4l2loopback
 
-install_stow() {
-  echo "Installing stow..."
-  sudo apt install -y stow
-  echo "stow installed!"
-}
+# nvim's undodir (sets.lua) is not created automatically
+mkdir -p "$HOME/.vim/undodir"
 
-# Run the functions
-install_zsh
-make_zsh_default
-install_oh_my_zsh
-install_zsh_plugins
-install_nvm
-install_fzf
-install_grep
-install_tmux
-install_nvim
-install_kitty
-install_starship
-install_pnpm
-install_yarn
-install_bun
-install_typescript
-install_docker
-install_mysql
-install_stow
-
-echo "All tools and plugins installed successfully! Please log out and log back in for 'Making zsh' to become the default shell."
-
-echo "Install nerd fonts"
+echo
+echo "Done. Log out and back in for the shell and docker group to apply."
+echo "Install these yourself:"
+printf '  - %s\n' "${MANUAL[@]}"

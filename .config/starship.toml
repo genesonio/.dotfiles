@@ -68,9 +68,7 @@ style = "bold white"
 format = "[$time]($style)"
 
 [custom.stunnel]
-when = "ps aux | grep stunnel | grep -v grep"
-command = "ps -o etime= -p $(ps aux | grep stunnel | grep -v grep | awk '{print $2}')"
+when = "pgrep -x stunnel"
+command = "ps -o etime= -p $(pgrep -x -o stunnel)"
 style = "red"
 format = "[TUNNEL OPEN for $output]($style)"
-
-command_timeout = 1000

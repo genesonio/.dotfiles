@@ -10,9 +10,6 @@ while true; do
     # Pick random wallpaper
     WALLPAPER=$(find "$WALLPAPER_DIR" -type f ! -path "*/.git/*" | shuf -n 1)
 
-    # Preload image
-    hyprctl hyprpaper preload "$WALLPAPER"
-
     # Apply to all monitors
     for MON in $MONITORS; do
         hyprctl hyprpaper wallpaper "$MON,$WALLPAPER"

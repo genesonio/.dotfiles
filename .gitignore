@@ -1,0 +1,4 @@
+.local/*
+!.local/bin/
+.local/bin/*
+!.local/bin/random_wallpaper.sh

@@ -1,2 +1,4 @@
 \.git
-\scripts
+^/scripts
+\.gitignore
+\.stow-local-ignore

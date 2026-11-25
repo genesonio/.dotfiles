@@ -72,12 +72,9 @@ zstyle ':omz:update' mode auto      # update automatically without asking
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 
-plugins=(git zsh-syntax-highlighting zsh-autosuggestions fzf aliases colorize command-not-found battery emoji-clock lol)
+plugins=(git zsh-autosuggestions fzf aliases colorize command-not-found battery emoji-clock lol zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
-
-source ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
-source ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 
 # User configuration
 
@@ -122,11 +119,11 @@ alias tmk="tmux kill-session"
 
 # alias templ="/home/genesio/go/bin/templ"
 
-alias wbr="pkill waybar && hyprctl dispatch exec waybar"
+alias wbr="pkill waybar; hyprctl dispatch exec waybar"
 
 bye() {
   echo "Updating system..."
-  if ! yay --noconfirm -Syu; then
+  if ! { sudo pacman --noconfirm -Syu && flatpak update -y; }; then
     echo "❌ Update failed — aborting shutdown."
     return 1
   fi
@@ -171,7 +168,7 @@ hyprc() {
 }
 
 wbrc() {
-  nvim ~/.config/waybar/config
+  nvim ~/.config/waybar/config.jsonc
 }
 
 n() {
@@ -189,8 +186,10 @@ pm() {
         pnpm "$@"
     elif [ -f package-lock.json ]; then
         npm "$@"
-    elif [ -f bun.lock ]; then
+    elif [ -f bun.lock ] || [ -f bun.lockb ]; then
         bun "$@"
+    else
+      echo "No package manager found"
     fi
 }
 
@@ -201,9 +200,7 @@ dpm() {
         doppler run -- pnpm "$@"
     elif [ -f package-lock.json ]; then
         doppler run -- npm "$@"
-    elif [ -f pnpm-lock.yaml ]; then
-        doppler run -- pnpm "$@"
-    elif [ -f bun.lock ]; then
+    elif [ -f bun.lock ] || [ -f bun.lockb ]; then
         doppler run -- bun "$@"
     else
       echo "No package manager found"
@@ -211,18 +208,21 @@ dpm() {
 }
 
 cdp() {
-    selected=$(find ~/Github -mindepth 1 -maxdepth 1 -type d | fzf --preview 'ls {}' --query "$1" --print0 --select-1)
-    cd $selected
+    selected=$(find ~/Github -mindepth 1 -maxdepth 1 -type d | fzf --preview 'ls {}' --query "$1" --select-1)
+    [ -n "$selected" ] || return
+    cd "$selected"
 }
 
 cdd() {
-    selected=$(find ~/Dockers -mindepth 1 -maxdepth 1 -type d | fzf --preview 'ls {}' --query "$1" --print0 --select-1)
-    cd $selected
+    selected=$(find ~/Dockers -mindepth 1 -maxdepth 1 -type d | fzf --preview 'ls {}' --query "$1" --select-1)
+    [ -n "$selected" ] || return
+    cd "$selected"
 }
 
 vp() {
-    selected=$(find ~/Github -mindepth 1 -maxdepth 1 -type d | fzf --preview 'ls {}' --query "$1" --print0 --select-1)
-    cd $selected
+    selected=$(find ~/Github -mindepth 1 -maxdepth 1 -type d | fzf --preview 'ls {}' --query "$1" --select-1)
+    [ -n "$selected" ] || return
+    cd "$selected"
     nvim .
 }
 
@@ -251,7 +251,7 @@ ngroksd() {
 }
 
 jcurl() {
-    curl $@ | jq
+    curl "$@" | jq
 }
 
 sshl() {
@@ -283,6 +283,7 @@ git() {
 
 cam() {
   command -v adb >/dev/null 2>&1 || { echo "adb not found"; return 1; }
+  [ -e /dev/video1 ] || { echo "/dev/video1 missing, run: sudo modprobe v4l2loopback"; return 1; }
 
   # Build list: serial + model
   local choice serial
@@ -311,7 +312,7 @@ cam() {
 }
 
 jogos() {
-  sudo mount -t ntfs-3g /dev/sdc1 /mnt/jogos
+  sudo mount -t ntfs-3g UUID=4E24DDB424DD9F71 /mnt/jogos
 }
 
 notify-end() {
@@ -327,17 +328,21 @@ bindkey -s ^g "tmux-session-fzf\n"
 eval "$(starship init zsh)"
 
 export NVM_DIR="$HOME/.config/nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+if [ -s "$NVM_DIR/nvm.sh" ]; then
+  \. "$NVM_DIR/nvm.sh"
+  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+elif [ -s /usr/share/nvm/init-nvm.sh ]; then
+  \. /usr/share/nvm/init-nvm.sh
+fi
 
 # Turso
-export PATH="/home/genesio/.turso:$PATH"
+export PATH="$HOME/.turso:$PATH"
 
 # bun completions
-[ -s "/home/genesio/.bun/_bun" ] && source "/home/genesio/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # pnpm
-export PNPM_HOME="/home/genesio/.local/share/pnpm"
+export PNPM_HOME="$HOME/.local/share/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
@@ -346,17 +351,10 @@ esac
 
 export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
-
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
 # opencode
-export PATH=/home/genesonio/.opencode/bin:$PATH
+export PATH="$HOME/.opencode/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
