@@ -9,7 +9,7 @@ export PATH="$HOME/.scripts:$PATH"
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="robbyrussell"
+ZSH_THEME=""
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -72,7 +72,7 @@ zstyle ':omz:update' mode auto      # update automatically without asking
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 
-plugins=(git zsh-autosuggestions fzf aliases colorize command-not-found battery emoji-clock lol zsh-syntax-highlighting)
+plugins=(git zsh-autosuggestions fzf aliases zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -242,35 +242,13 @@ ggraph() {
   git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --all
 }
 
-ngroks() {
-  ngrok http --url=large-squirrel-allowed.ngrok-free.app "$@"
-}
-
-ngroksd() {
-  ngrok http --url=amazingly-ruling-crawdad.ngrok-free.app "$@"
-}
-
 jcurl() {
     curl "$@" | jq
-}
-
-sshl() {
-  ssh -i ~/.ssh/learnistic "$@"
 }
 
 dot() {
     cd ~/.dotfiles
     nvim .
-}
-
-lrn() {
-  eval "$(ssh-agent -s)"
-  ssh-add ~/.ssh/learnistic
-}
-
-pvt() {
-  eval "$(ssh-agent -s)"
-  ssh-add ~/.ssh/id_ed25519
 }
 
 git() {
@@ -327,13 +305,9 @@ bindkey -s ^g "tmux-session-fzf\n"
 
 eval "$(starship init zsh)"
 
-export NVM_DIR="$HOME/.config/nvm"
-if [ -s "$NVM_DIR/nvm.sh" ]; then
-  \. "$NVM_DIR/nvm.sh"
-  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-elif [ -s /usr/share/nvm/init-nvm.sh ]; then
-  \. /usr/share/nvm/init-nvm.sh
-fi
+eval "$(fnm env --use-on-cd --version-file-strategy=recursive --shell zsh)"
+
+export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 
 # Turso
 export PATH="$HOME/.turso:$PATH"
@@ -358,3 +332,6 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 # opencode
 export PATH="$HOME/.opencode/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
+
+# Machine-specific and private bits (not in the repo)
+[ -f ~/.zshrc.local ] && source ~/.zshrc.local

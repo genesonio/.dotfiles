@@ -1,4 +1,7 @@
 \.git
 ^/scripts
+^/etc
+^/\.githooks
+^/README\.md
 \.gitignore
 \.stow-local-ignore

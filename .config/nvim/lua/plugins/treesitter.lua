@@ -1,55 +1,59 @@
+local parsers = { "go", "lua", "tsx", "javascript", "typescript", "vimdoc", "vim", "bash", "json", "prisma", "sql", "solidity", "yaml", "templ" }
+
 return {
-  -- Highlight, edit, and navigate code
-  "nvim-treesitter/nvim-treesitter",
-  -- `master` is frozen but stable; `main` is a full rewrite without nvim-treesitter.configs
-  branch = "master",
-  lazy = false,
-  build = ":TSUpdate",
-  dependencies = {
+  {
+    -- Highlight, edit, and navigate code
+    "nvim-treesitter/nvim-treesitter",
+    branch = "main",
+    lazy = false,
+    build = ":TSUpdate",
+    config = function()
+      require("nvim-treesitter").install(parsers)
+
+      vim.api.nvim_create_autocmd("FileType", {
+        group = vim.api.nvim_create_augroup("UserTreesitter", { clear = true }),
+        callback = function(args)
+          if not pcall(vim.treesitter.start, args.buf) then
+            return
+          end
+          vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+        end,
+      })
+
+      -- Neovim 0.12 provides node selection as visual-mode `an`/`in`
+      vim.keymap.set("n", "<C-space>", "van", { remap = true, desc = "Start treesitter selection" })
+      vim.keymap.set("x", "<C-space>", "an", { remap = true, desc = "Grow treesitter selection" })
+      vim.keymap.set("x", "<M-space>", "in", { remap = true, desc = "Shrink treesitter selection" })
+    end,
+  },
+
+  {
     -- also provides the @function/@class queries mini.ai uses
     "nvim-treesitter/nvim-treesitter-textobjects",
-  },
-  main = "nvim-treesitter.configs",
-  opts = {
-    ensure_installed = { "go", "lua", "tsx", "javascript", "typescript", "vimdoc", "vim", "bash", "json", "prisma", "sql", "solidity", "yaml", "templ" },
-    auto_install = false,
-    sync_install = false,
-    modules = {},
-    ignore_install = {},
+    branch = "main",
+    init = function()
+      -- runtime ftplugins (e.g. go, python) map ]] and [[ buffer-locally, which would shadow ours
+      vim.g.no_plugin_maps = true
+    end,
+    config = function()
+      require("nvim-treesitter-textobjects").setup({ move = { set_jumps = true } })
 
-    highlight = { enable = true },
-    indent = { enable = true },
-    incremental_selection = {
-      enable = true,
-      keymaps = {
-        init_selection = "<c-space>",
-        node_incremental = "<c-space>",
-        scope_incremental = "<c-s>",
-        node_decremental = "<M-space>",
-      },
-    },
-    textobjects = {
-      -- af/if, ac/ic, aa/ia text objects are handled by mini.ai
-      move = {
-        enable = true,
-        set_jumps = true,
-        goto_next_start = {
-          ["]m"] = "@function.outer",
-          ["]]"] = "@class.outer",
-        },
-        goto_next_end = {
-          ["]M"] = "@function.outer",
-          ["]["] = "@class.outer",
-        },
-        goto_previous_start = {
-          ["[m"] = "@function.outer",
-          ["[["] = "@class.outer",
-        },
-        goto_previous_end = {
-          ["[M"] = "@function.outer",
-          ["[]"] = "@class.outer",
-        },
-      },
-    },
+      local move = require("nvim-treesitter-textobjects.move")
+      local maps = {
+        ["]m"] = { move.goto_next_start, "@function.outer" },
+        ["]]"] = { move.goto_next_start, "@class.outer" },
+        ["]M"] = { move.goto_next_end, "@function.outer" },
+        ["]["] = { move.goto_next_end, "@class.outer" },
+        ["[m"] = { move.goto_previous_start, "@function.outer" },
+        ["[["] = { move.goto_previous_start, "@class.outer" },
+        ["[M"] = { move.goto_previous_end, "@function.outer" },
+        ["[]"] = { move.goto_previous_end, "@class.outer" },
+      }
+      for key, m in pairs(maps) do
+        vim.keymap.set({ "n", "x", "o" }, key, function()
+          m[1](m[2], "textobjects")
+        end)
+      end
+    end,
   },
 }

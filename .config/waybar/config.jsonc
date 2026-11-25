@@ -101,13 +101,13 @@
 
   "custom/lock": {
     "tooltip": false,
-    "on-click": "sh -c '(sleep 0.5s; hyprlock --grace 0)'",
+    "on-click": "loginctl lock-session",
     "format": " "
   },
 
   "custom/shutdown": {
     "tooltip": false,
-    "on-click": "systemctl poweroff",
+    "on-click": "printf 'No\\nYes' | rofi -dmenu -p 'Shut down?' | grep -qx Yes && systemctl poweroff",
     "format": " "
   }
 }

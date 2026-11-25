@@ -5,7 +5,7 @@ DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 PACMAN_PKGS=(
   # Hyprland desktop
-  hyprland hypridle hyprlock hyprpaper hyprpicker uwsm
+  hyprland hypridle hyprlock hyprpaper hyprpicker hyprpolkitagent uwsm sddm
   xdg-desktop-portal-hyprland xdg-desktop-portal-gtk qt5-wayland qt6-wayland
   waybar rofi rofi-calc kitty thunar flameshot dunst libnotify
   wl-clipboard jq brightnessctl playerctl
@@ -17,10 +17,10 @@ PACMAN_PKGS=(
   ttf-firacode-nerd noto-fonts noto-fonts-emoji inter-font adwaita-cursors
 
   # Shell and editor
-  zsh starship tmux fzf ripgrep neovim git stow base-devel unzip curl wget python
+  zsh starship tmux fzf ripgrep neovim tree-sitter-cli git stow base-devel unzip curl wget python shellcheck
 
   # Web dev
-  nvm nodejs npm pnpm yarn bun typescript go
+  fnm nodejs npm pnpm yarn bun typescript go
   docker docker-compose docker-buildx
 
   # Tools used by .zshrc functions
@@ -33,8 +33,8 @@ MANUAL=(
   "ngrok   - not in pacman/Flathub: https://ngrok.com/download"
   "doppler - not in pacman/Flathub: https://docs.doppler.com/docs/install-cli"
   "hyprcap - not in pacman/Flathub (SUPER+SHIFT+R): https://github.com/alonso-herreros/hyprcap"
-  "~/wallpapers/default.png - used by hyprpaper and hyprlock"
-  "Log in with the 'Hyprland (uwsm-managed)' session, or set Session=hyprland-uwsm for SDDM autologin"
+  "$HOME/wallpapers/default.png - used by hyprpaper and hyprlock"
+  "Private shell functions go in ~/.zshrc.local; SSH hosts in ~/.ssh/config"
 )
 
 [ -f /etc/arch-release ] || { echo "This script is for Arch Linux."; exit 1; }
@@ -52,7 +52,9 @@ mkdir -p "$HOME/.local/bin" "$HOME/.config/systemd/user"
 stow -d "$DOTFILES" -t "$HOME" .
 
 echo "==> Enabling session services (started by the uwsm session)"
-systemctl --user enable waybar.service hyprpaper.service hypridle.service
+systemctl --user enable waybar.service hyprpaper.service hypridle.service hyprpolkitagent.service ssh-agent.socket
+
+git -C "$DOTFILES" config core.hooksPath .githooks
 
 echo "==> Installing oh-my-zsh"
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
@@ -70,10 +72,16 @@ echo "==> Enabling docker"
 sudo systemctl enable --now docker.service
 sudo usermod -aG docker "$USER"
 
-echo "==> Configuring v4l2loopback for cam (phone camera on /dev/video1)"
-echo "v4l2loopback" | sudo tee /etc/modules-load.d/v4l2loopback.conf >/dev/null
-echo 'options v4l2loopback video_nr=1 card_label="Phone Camera" exclusive_caps=1' | sudo tee /etc/modprobe.d/v4l2loopback.conf >/dev/null
+echo "==> Installing system config files (SDDM autologin, v4l2loopback for cam)"
+sudo cp -r --no-preserve=ownership "$DOTFILES/etc/." /etc/
+sudo sed -i "s/^User=.*/User=$USER/" /etc/sddm.conf.d/autologin.conf
+sudo systemctl enable sddm.service
 sudo modprobe v4l2loopback
+
+echo "==> Installing Node LTS with fnm"
+eval "$(fnm env --shell bash)"
+fnm install --lts
+fnm default "$(fnm list | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' | sort -V | tail -1)"
 
 # nvim's undodir (sets.lua) is not created automatically
 mkdir -p "$HOME/.vim/undodir"
