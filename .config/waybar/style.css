@@ -79,3 +79,7 @@ button {
   color: #bb9af7;
 }
 
+#custom-music.paused {
+  color: #565f89;
+}
+

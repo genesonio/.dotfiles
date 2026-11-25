@@ -41,13 +41,10 @@
   },
 
   "custom/music": {
-    "format": " {}",
-    "escape": true,
-    "interval": 5,
+    "exec": "~/.config/waybar/scripts/music.sh",
+    "return-type": "json",
     "tooltip": false,
-    "exec": "playerctl metadata --format='{{ artist }} - {{ title }}'",
-    "on-click": "playerctl play-pause",
-    "max-length": 40
+    "on-click": "playerctl play-pause"
   },
 
   "clock": {

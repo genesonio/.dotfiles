@@ -8,7 +8,7 @@ run() {
   "$@" || status=1
 }
 
-run shellcheck scripts/*.sh .scripts/* .githooks/*
+run shellcheck scripts/*.sh .scripts/* .githooks/* .config/waybar/scripts/*.sh
 run zsh -n .zshrc
 run Hyprland --verify-config -c .config/hypr/hyprland.lua
 
