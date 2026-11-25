@@ -17,7 +17,7 @@ PACMAN_PKGS=(
   ttf-firacode-nerd noto-fonts noto-fonts-emoji inter-font adwaita-cursors
 
   # Shell and editor
-  zsh starship tmux fzf ripgrep neovim tree-sitter-cli git stow base-devel unzip curl wget python shellcheck
+  zsh starship tmux fzf ripgrep neovim tree-sitter-cli imagemagick git stow base-devel unzip curl wget python shellcheck
 
   # Web dev
   fnm nodejs npm pnpm yarn bun typescript go
