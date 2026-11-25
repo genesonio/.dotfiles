@@ -1,8 +1,8 @@
 -- Formatting. <leader>f and format-on-save both dispatch per filetype:
---   js/ts/jsx/tsx -> prettier
+--   js/ts/jsx/tsx, css, html, json, yaml, markdown -> prettier
 --   go            -> goimports (organize imports) + gofumpt
 --   templ         -> templ fmt
---   anything else -> whatever LSP attached can format (lua_ls, html, ...)
+--   anything else -> whatever LSP attached can format (lua_ls, ...)
 local prettier = { "prettier" }
 
 return {
@@ -24,6 +24,13 @@ return {
       javascriptreact = prettier,
       typescript = prettier,
       typescriptreact = prettier,
+      css = prettier,
+      scss = prettier,
+      html = prettier,
+      json = prettier,
+      jsonc = prettier,
+      yaml = prettier,
+      markdown = prettier,
       go = { "goimports", "gofumpt" },
       templ = { "templ" },
     },

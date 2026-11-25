@@ -1,4 +1,4 @@
-local parsers = { "go", "lua", "tsx", "javascript", "typescript", "vimdoc", "vim", "bash", "json", "prisma", "sql", "solidity", "yaml", "templ" }
+local parsers = { "go", "lua", "tsx", "javascript", "typescript", "vimdoc", "vim", "bash", "json", "prisma", "sql", "solidity", "yaml", "templ", "css", "html", "markdown", "markdown_inline", "dockerfile" }
 
 return {
   {

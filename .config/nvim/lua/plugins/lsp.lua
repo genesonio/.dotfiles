@@ -24,6 +24,12 @@ local servers = {
   html = { filetypes = { "html", "templ" } },
   htmx = { filetypes = { "html", "templ" } },
   lua_ls = {},
+  eslint = {},
+  cssls = {},
+  dockerls = {},
+  -- schemas are added in config(), once SchemaStore is loaded
+  jsonls = {},
+  yamlls = {},
 }
 
 -- Formatters used by conform.nvim that mason should keep installed
@@ -66,6 +72,10 @@ local function on_attach(args)
   nmap("<leader>wa", vim.lsp.buf.add_workspace_folder, "[W]orkspace [A]dd Folder")
   nmap("<leader>wr", vim.lsp.buf.remove_workspace_folder, "[W]orkspace [R]emove Folder")
 
+  if client.name == "eslint" then
+    nmap("<leader>ef", "<cmd>LspEslintFixAll<cr>", "[E]SLint [F]ix all")
+  end
+
   if client.name == "ts_ls" then
     nmap("<leader>o", function()
       client:exec_cmd({
@@ -97,6 +107,7 @@ return {
       "mason-org/mason-lspconfig.nvim",
       { "j-hui/fidget.nvim", opts = {} },
       "hrsh7th/cmp-nvim-lsp",
+      "b0o/SchemaStore.nvim",
     },
     config = function()
       vim.lsp.config("*", {
@@ -106,6 +117,12 @@ return {
       for name, config in pairs(servers) do
         vim.lsp.config(name, config)
       end
+      vim.lsp.config("jsonls", {
+        settings = { json = { schemas = require("schemastore").json.schemas(), validate = { enable = true } } },
+      })
+      vim.lsp.config("yamlls", {
+        settings = { yaml = { schemaStore = { enable = false, url = "" }, schemas = require("schemastore").yaml.schemas() } },
+      })
 
       require("mason-lspconfig").setup({
         ensure_installed = vim.tbl_keys(servers),
