@@ -5,7 +5,7 @@ DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 PACMAN_PKGS=(
   # Hyprland desktop
-  hyprland hypridle hyprlock hyprpaper hyprpicker
+  hyprland hypridle hyprlock hyprpaper hyprpicker uwsm
   xdg-desktop-portal-hyprland xdg-desktop-portal-gtk qt5-wayland qt6-wayland
   waybar rofi rofi-calc kitty thunar flameshot dunst libnotify
   wl-clipboard jq brightnessctl playerctl
@@ -34,6 +34,7 @@ MANUAL=(
   "doppler - not in pacman/Flathub: https://docs.doppler.com/docs/install-cli"
   "hyprcap - not in pacman/Flathub (SUPER+SHIFT+R): https://github.com/alonso-herreros/hyprcap"
   "~/wallpapers/default.png - used by hyprpaper and hyprlock"
+  "Log in with the 'Hyprland (uwsm-managed)' session, or set Session=hyprland-uwsm for SDDM autologin"
 )
 
 [ -f /etc/arch-release ] || { echo "This script is for Arch Linux."; exit 1; }
@@ -47,8 +48,11 @@ flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.f
 echo "==> Linking dotfiles"
 # A real ~/.local/bin stops stow from folding it into a symlink to the repo,
 # which would make installers drop their binaries inside the dotfiles.
-mkdir -p "$HOME/.local/bin"
+mkdir -p "$HOME/.local/bin" "$HOME/.config/systemd/user"
 stow -d "$DOTFILES" -t "$HOME" .
+
+echo "==> Enabling session services (started by the uwsm session)"
+systemctl --user enable waybar.service hyprpaper.service hypridle.service
 
 echo "==> Installing oh-my-zsh"
 if [ ! -d "$HOME/.oh-my-zsh" ]; then

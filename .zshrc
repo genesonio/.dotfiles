@@ -119,7 +119,7 @@ alias tmk="tmux kill-session"
 
 # alias templ="/home/genesio/go/bin/templ"
 
-alias wbr="pkill waybar; hyprctl dispatch exec waybar"
+alias wbr="systemctl --user restart waybar"
 
 bye() {
   echo "Updating system..."
