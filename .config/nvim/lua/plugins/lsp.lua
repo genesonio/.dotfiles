@@ -106,12 +106,12 @@ return {
       { "mason-org/mason.nvim", opts = {}, cmd = { "Mason", "MasonInstall", "MasonUpdate", "MasonUninstall", "MasonLog" } },
       "mason-org/mason-lspconfig.nvim",
       { "j-hui/fidget.nvim", opts = {} },
-      "hrsh7th/cmp-nvim-lsp",
+      "saghen/blink.cmp",
       "b0o/SchemaStore.nvim",
     },
     config = function()
       vim.lsp.config("*", {
-        capabilities = require("cmp_nvim_lsp").default_capabilities(),
+        capabilities = require("blink.cmp").get_lsp_capabilities(),
       })
 
       for name, config in pairs(servers) do
@@ -142,46 +142,25 @@ return {
   },
 
   {
-    "hrsh7th/nvim-cmp",
+    "saghen/blink.cmp",
+    version = "1.*",
     event = "InsertEnter",
-    dependencies = {
-      "hrsh7th/cmp-nvim-lsp",
-      "hrsh7th/cmp-path",
-      "hrsh7th/cmp-buffer",
+    opts = {
+      keymap = {
+        preset = "enter",
+        ["<C-Space>"] = { "show", "show_documentation", "hide_documentation" },
+      },
+      completion = {
+        list = { selection = { preselect = true, auto_insert = false } },
+        documentation = { auto_show = true },
+      },
+      signature = { enabled = true },
+      sources = {
+        default = { "lazydev", "lsp", "path", "buffer" },
+        providers = {
+          lazydev = { name = "LazyDev", module = "lazydev.integrations.blink", score_offset = 100 },
+        },
+      },
     },
-    config = function()
-      local cmp = require("cmp")
-
-      cmp.setup({
-        snippet = {
-          expand = function(args)
-            vim.snippet.expand(args.body)
-          end,
-        },
-        completion = {
-          completeopt = "menu,menuone,noinsert",
-        },
-        mapping = cmp.mapping.preset.insert({
-          ["<C-Space>"] = cmp.mapping.complete(),
-          ["<CR>"] = cmp.mapping.confirm({
-            behavior = cmp.ConfirmBehavior.Replace,
-            select = true,
-          }),
-        }),
-        sources = {
-          { name = "lazydev", group_index = 0 },
-          { name = "nvim_lsp", max_item_count = 30 },
-          { name = "path" },
-          { name = "buffer" },
-        },
-      })
-
-      cmp.setup.filetype({ "sql", "mysql", "plsql" }, {
-        sources = {
-          { name = "vim-dadbod-completion" },
-          { name = "buffer" },
-        },
-      })
-    end,
   },
 }
