@@ -143,8 +143,8 @@ for _, w in ipairs(workspaceKeys) do
 end
 
 hl.bind("Print",                    hl.dsp.exec_cmd("flameshot gui"))
-hl.bind(mainMod .. " + B",          hl.dsp.exec_cmd("google-chrome-stable --ozone-platform=wayland --disable-gpu"))
-hl.bind(mainMod .. " + SHIFT + S",  hl.dsp.exec_cmd("slack"))
+hl.bind(mainMod .. " + B",          hl.dsp.exec_cmd("flatpak run com.google.Chrome --ozone-platform=wayland --disable-gpu"))
+hl.bind(mainMod .. " + SHIFT + S",  hl.dsp.exec_cmd("flatpak run com.slack.Slack"))
 hl.bind(mainMod .. " + SHIFT + P",  hl.dsp.exec_cmd("hyprpicker -a"))
 hl.bind(mainMod .. " + TAB",        hl.dsp.focus({ workspace = "previous" }))
 hl.bind(mainMod .. " + SHIFT + R",  hl.dsp.exec_cmd("hyprcap rec region -c -n"))
@@ -174,7 +174,7 @@ end
 hl.layer_rule({ match = { namespace = "vicinae" }, name = "vicinae-blur", blur = true, ignore_alpha = 0 })
 hl.layer_rule({ match = { namespace = "vicinae" }, name = "vicinae-no-animation", no_anim = true })
 
-hl.window_rule({ name = "slack-ws3",   match = { class = "^(slack)$" },   workspace = "3 silent" })
+hl.window_rule({ name = "slack-ws3",   match = { class = "^(com.slack.Slack)$" }, workspace = "3 silent" })
 hl.window_rule({ name = "salinha-ws5", match = { class = "^(salinha)$" }, workspace = "5 silent" })
 
 hl.window_rule({
