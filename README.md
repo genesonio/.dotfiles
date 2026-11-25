@@ -21,7 +21,7 @@ Log out and back in when it finishes.
 | `.config/waybar/`, `.config/vicinae/`, `.config/kitty/` | Bar, launcher, terminal |
 | `.config/nvim/` | Neovim (lazy.nvim, `lazy-lock.json` pins plugins) |
 | `.zshrc`, `.tmux.conf`, `.scripts/` | Shell, tmux and the tmux session pickers |
-| `etc/` | System files copied to `/etc` (SDDM autologin, v4l2loopback) — not stowed |
+| `etc/` | System files copied to `/etc` (SDDM autologin, v4l2loopback, zram, journald) — not stowed |
 | `scripts/` | `install_tools.sh`, `check.sh` — not stowed |
 
 Session daemons (waybar, hyprpaper, hypridle, polkit agent) are systemd user services started by

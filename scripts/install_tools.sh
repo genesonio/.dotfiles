@@ -24,7 +24,7 @@ PACMAN_PKGS=(
   docker docker-compose docker-buildx
 
   # Tools used by .zshrc functions
-  pacman-contrib openssh speedtest-cli scrcpy android-tools v4l2loopback-dkms linux-headers ntfs-3g
+  zram-generator pacman-contrib openssh speedtest-cli scrcpy android-tools v4l2loopback-dkms linux-headers ntfs-3g
 
   flatpak
 )
@@ -82,10 +82,13 @@ echo "==> Enabling docker"
 sudo systemctl enable --now docker.service
 sudo usermod -aG docker "$USER"
 
-echo "==> Installing system config files (SDDM autologin, v4l2loopback for cam)"
+echo "==> Installing system config files (SDDM autologin, v4l2loopback for cam, zram, journald cap)"
 sudo cp -r --no-preserve=ownership "$DOTFILES/etc/." /etc/
 sudo sed -i "s/^User=.*/User=$USER/" /etc/sddm.conf.d/autologin.conf
 sudo systemctl enable sddm.service paccache.timer
+sudo systemctl daemon-reload
+sudo systemctl start systemd-zram-setup@zram0.service
+sudo sed -i 's/^#Color$/Color/' /etc/pacman.conf
 sudo modprobe v4l2loopback
 
 echo "==> Installing Node LTS with fnm"
