@@ -17,6 +17,7 @@
     "cpu",
     "memory",
     "tray",
+    "custom/notifications",
     "custom/lock",
     "custom/shutdown"
   ],
@@ -94,6 +95,16 @@
         "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
         "tooltip-format": "{controller_alias}\t{controller_address}",
         "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{device_enumerate}"
+  },
+
+  "custom/notifications": {
+    "exec": "dunstctl is-paused | grep -q true && i='󰂛' || i='󰂚'; printf '{\"text\":\"%s\",\"tooltip\":\"Sound %s%% (scroll to change)\"}\\n' \"$i\" \"$(cat ~/.local/state/notify-volume 2>/dev/null || echo 100)\"",
+    "return-type": "json",
+    "interval": "once",
+    "signal": 8,
+    "on-click": "dunstctl set-paused toggle && pkill -RTMIN+8 waybar",
+    "on-scroll-up": "~/.config/dunst/notify-sound up",
+    "on-scroll-down": "~/.config/dunst/notify-sound down"
   },
 
   "custom/lock": {

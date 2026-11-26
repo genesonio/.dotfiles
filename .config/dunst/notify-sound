@@ -1,0 +1,20 @@
+#!/bin/sh
+# usage: notify-sound [up|down]  (no args = called by dunst for a notification)
+state="${XDG_STATE_HOME:-$HOME/.local/state}/notify-volume"
+vol=$(cat "$state" 2>/dev/null || echo 100)
+
+case "$1" in
+  up)   vol=$((vol + 10 > 100 ? 100 : vol + 10)) ;;
+  down) vol=$((vol - 10 < 0 ? 0 : vol - 10)) ;;
+  *)
+    [ "$DUNST_URGENCY" = LOW ] && exit 0
+    sound=message
+    [ "$DUNST_URGENCY" = CRITICAL ] && sound=dialog-warning
+    exec pw-play --volume "$(awk "BEGIN{print $vol/100}")" "/usr/share/sounds/freedesktop/stereo/$sound.oga"
+    ;;
+esac
+
+mkdir -p "${state%/*}"
+echo "$vol" > "$state"
+pkill -RTMIN+8 waybar
+exec pw-play --volume "$(awk "BEGIN{print $vol/100}")" /usr/share/sounds/freedesktop/stereo/message.oga

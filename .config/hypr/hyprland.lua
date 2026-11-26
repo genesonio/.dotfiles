@@ -148,6 +148,7 @@ hl.bind(mainMod .. " + SHIFT + S",  hl.dsp.exec_cmd("flatpak run com.slack.Slack
 hl.bind(mainMod .. " + SHIFT + P",  hl.dsp.exec_cmd("hyprpicker -a"))
 hl.bind(mainMod .. " + TAB",        hl.dsp.focus({ workspace = "previous" }))
 hl.bind(mainMod .. " + SHIFT + R",  hl.dsp.exec_cmd("hyprcap rec region -c -n"))
+hl.bind(mainMod .. " + N",          hl.dsp.exec_cmd("dunstctl set-paused toggle && pkill -RTMIN+8 waybar"))
 
 hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(),   { mouse = true })
 hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
