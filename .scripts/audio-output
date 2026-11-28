@@ -1,0 +1,26 @@
+#!/bin/sh
+# pick an output (device + port, e.g. headphones vs speakers) with vicinae
+list() {
+  pactl -f json list sinks | python3 -c '
+import json, sys
+default = sys.argv[1]
+sinks = json.load(sys.stdin)
+for s in sinks:
+    ports = [p for p in s["ports"] if p["availability"] != "not available"]
+    for p in ports or [{"name": "", "description": ""}]:
+        cur = s["name"] == default and p["name"] in ("", s["active_port"])
+        label = p["description"] or s["description"]
+        if p["description"] and len(sinks) > 1:
+            label += " (" + s["description"] + ")"
+        print(("● " if cur else "  ") + label, s["name"], p["name"], sep="\t")
+' "$(pactl get-default-sink)"
+}
+
+choices=$(list)
+pick=$(printf '%s\n' "$choices" | cut -f1 | "$HOME/.local/bin/vicinae" dmenu -n 'Audio output' --no-section --no-footer -H 250) || exit 0
+line=$(printf '%s\n' "$choices" | awk -F'\t' -v p="$pick" '$1 == p' | head -1)
+sink=$(printf '%s' "$line" | cut -f2)
+port=$(printf '%s' "$line" | cut -f3)
+[ -n "$sink" ] || exit 0
+pactl set-default-sink "$sink"
+[ -n "$port" ] && pactl set-sink-port "$sink" "$port"

@@ -246,6 +246,10 @@ jcurl() {
     curl "$@" | jq
 }
 
+# the agent is the systemd user one (SSH_AUTH_SOCK below), so no ssh-agent eval
+alias lrn='ssh-add ~/.ssh/learnistic'
+alias pvt='ssh-add ~/.ssh/id_ed25519'
+
 dot() {
     cd ~/.dotfiles
     nvim .
